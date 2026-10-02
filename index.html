@@ -306,6 +306,7 @@
     transform: translate3d(var(--x, -9999px), var(--y, 0px), 0) scale(var(--s, 1));
     transform-origin: var(--ax, 25px) 50%;
   }
+  .orbit:not(.placed) .dest { transition: none; }   /* no fly-in on first paint: pins appear in place */
   .orbit .dest.flip { flex-direction: row-reverse; padding: 5px 5px 5px 16px; text-align: right; }
   .orbit .dest:hover, .orbit .dest:focus-visible { transform: translate3d(var(--x, -9999px), var(--y, 0px), 0) scale(calc(var(--s, 1) + 0.03)); }
   .orbit .dest .ico { position: relative; width: 40px; height: 40px; border-radius: 50%; flex: none; }
@@ -649,12 +650,12 @@
     reach: 0.5,                // a destination's reach: its distance to the drone, capped at this share of the shorter side
     minReach: 180,
     switchAt: 0.035,           // swap clips only once the current uniform is off (all clips start on the same frame)
-    rewind: 0.24,              // smoothing while a uniform comes off before switching (faster than dressing)
+    rewind: 0.18,              // smoothing while a uniform comes off before switching (faster than dressing)
     // Phones and narrow windows (list): the nearest button reacts from up to this far away.
     influence: 0.8,            // share of the shorter viewport side where a destination starts reacting
     minInfluence: 320, maxInfluence: 820,
     curve: [[1, 0], [0.6, 0.3], [0.15, 0.72], [0, 1]], // [distance ratio, clip progress]
-    response: 0.14,            // smoothing per 60 Hz frame (0-1); the same feel at any refresh rate
+    response: 0.10,            // smoothing per 60 Hz frame (0-1); the same feel at any refresh rate
     seekFps: 30,               // max seeks per second per clip
     fps: 24,                   // frame rate of the clips
     fallbackMax: 0.42,         // destinations without their own clip reuse the base clip up to here (eyes open, looking)
@@ -894,6 +895,9 @@
     orbitRing.setAttribute('cx', fx(g.x)); orbitRing.setAttribute('cy', fx(g.y));
     orbitRing.setAttribute('rx', fx(rx)); orbitRing.setAttribute('ry', fx(ry));
     measure();
+    if (!root.classList.contains('placed')) {      // enable the pins' transitions only after they are in place
+      requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.add('placed'); }); });
+    }
   }
   function measure() {
     SITES.forEach(function (s) {
