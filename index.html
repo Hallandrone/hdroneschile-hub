@@ -98,28 +98,29 @@
   .vignette {
     position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0;
     background: radial-gradient(ellipse 58% 62% at 62% 48%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.55) 100%);
-    transition: opacity 1.2s ease;
+    transition: opacity 0.6s ease;
   }
 
-  /* Take-off sequence (≈9 s): 1) the drone finishes dressing while the stage pushes in slowly and the UI steps
-     aside; 2) close-up on the drone with the destination name; 3) lift-off, flash, and off to the site. */
+  /* Take-off sequence (3 s from click to the site): 1) the drone finishes dressing while the stage pushes in
+     and the UI steps aside; 2) close-up on the drone with the destination name; 3) lift-off, flash, and off
+     to the site. The script sets the phase lengths (--t-*) from CONFIG.launchSeconds. */
   body.launch .copy, body.launch .hud, body.launch .nav, body.launch .contact { pointer-events: none; }
-  body.launch .stage { transition: transform 4.6s cubic-bezier(0.25, 0.5, 0.2, 1), filter 4.6s ease; }
-  body.launch .copy, body.launch .hud { opacity: 0; transform: translateY(18px); transition: opacity 1.2s ease, transform 1.4s ease; }
-  body.launch .nav { opacity: 0; transform: translate(-50%, -16px); transition: opacity 1.2s ease, transform 1.4s ease; }
-  body.launch .about, body.launch .contact { opacity: 0; transition: opacity 0.5s ease; }
+  body.launch .stage { transition: transform var(--t-dress, 1.2s) cubic-bezier(0.25, 0.5, 0.2, 1), filter var(--t-dress, 1.2s) ease; }
+  body.launch .copy, body.launch .hud { opacity: 0; transform: translateY(18px); transition: opacity 0.35s ease, transform 0.45s ease; }
+  body.launch .nav { opacity: 0; transform: translate(-50%, -16px); transition: opacity 0.35s ease, transform 0.45s ease; }
+  body.launch .about, body.launch .contact { opacity: 0; transition: opacity 0.25s ease; }
   body.launch .shade { opacity: 0.35; }
   body.launch .ring { opacity: 0; }
-  body.closeup .stage { transition: transform 2.6s cubic-bezier(0.3, 0.6, 0.2, 1), filter 2.6s ease; }
+  body.closeup .stage { transition: transform var(--t-closeup, 1s) cubic-bezier(0.3, 0.6, 0.2, 1), filter var(--t-closeup, 1s) ease; }
   body.closeup .vignette { opacity: 1; }
-  body.takeoff .stage { transition: transform 1.4s cubic-bezier(0.4, 0.6, 0.3, 1), filter 1.4s ease; }
-  .flash { position: fixed; inset: 0; z-index: 20; pointer-events: none; opacity: 0; background: #FFFFFF; transition: opacity 0.9s ease 0.45s; }
+  body.takeoff .stage { transition: transform var(--t-lift, 0.8s) cubic-bezier(0.4, 0.6, 0.3, 1), filter var(--t-lift, 0.8s) ease; }
+  .flash { position: fixed; inset: 0; z-index: 20; pointer-events: none; opacity: 0; background: #FFFFFF; transition: opacity var(--t-flash, 0.55s) ease var(--t-flash-delay, 0.2s); }
   body.takeoff .flash { opacity: 1; }
   .launch-label {
     position: fixed; z-index: 21; left: var(--gutter); bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(40px, 10vh, 110px));
     margin: 0; opacity: 0; pointer-events: none; transform: translateY(16px);
     display: grid; gap: 10px; max-width: min(560px, calc(100% - 2 * var(--gutter)));
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition: opacity 0.35s ease, transform 0.35s ease;
   }
   .launch-label .kicker { font: 400 14px/1.2 var(--ui); color: var(--text-soft); }
   .launch-label .kicker b { color: var(--text); font-weight: 600; }
@@ -127,8 +128,8 @@
   .launch-label .bar { height: 3px; width: min(100%, 420px); border-radius: 2px; background: rgba(255, 255, 255, 0.25); overflow: hidden; }
   .launch-label .bar i { display: block; height: 100%; width: 100%; transform-origin: left; transform: scaleX(0); background: var(--dest); }
   body.launch .launch-label { opacity: 1; transform: translateY(0); }
-  body.launch .launch-label .bar i { transform: scaleX(1); transition: transform 8.6s linear; }
-  body.takeoff .launch-label { opacity: 0; transform: translateY(-30px); transition: opacity 0.5s ease, transform 0.7s ease; }
+  body.launch .launch-label .bar i { transform: scaleX(1); transition: transform var(--t-bar, 2.2s) linear; }
+  body.takeoff .launch-label { opacity: 0; transform: translateY(-30px); transition: opacity 0.3s ease, transform 0.4s ease; }
 
   /* Navigation */
   .nav {
@@ -843,9 +844,8 @@
     fps: 24,                   // frame rate of the clips
     fallbackMax: 0.42,         // destinations without their own clip reuse the base clip up to here (eyes open, looking)
     hoverZoom: 0.10,           // extra stage zoom at full progress (the drone comes closer as you approach)
-    dressSeconds: 4.4,         // phase 1: the clip finishes dressing in about this long
-    closeupSeconds: 3.0,       // phase 2: close-up on the drone
-    takeoffSeconds: 1.6        // phase 3: lift-off and flash, then the site
+    launchSeconds: 3           // click → destination site. Split: 40 % dressing and push-in, 33 % close-up,
+                               // 27 % lift-off and flash (1.2 s + 1 s + 0.8 s at 3 s)
   };
   // Where the drone hovers in the 1920x1080 clips: centre and half-size, as shares of the frame.
   var DRONE = { x: 0.636, y: 0.49, hw: 0.22, hh: 0.235 };
@@ -1320,19 +1320,28 @@
     launchName.textContent = site.el.querySelector('.name').textContent;
     launchUniform.textContent = site.uniform || site.shortName;
     var p = playerOf(site);
-    var dress = reduceMotion ? 1.2 : CONFIG.dressSeconds, closeup = reduceMotion ? 1.2 : CONFIG.closeupSeconds, lift = reduceMotion ? 0.8 : CONFIG.takeoffSeconds;
+    var total = CONFIG.launchSeconds;
+    var dress = total * 0.4, closeup = total / 3, lift = total - dress - closeup;
+    var dressBy = dress + closeup / 2;                // fully dressed halfway through the close-up
+    function secs(v) { return v.toFixed(2) + 's'; }
+    rootStyle.setProperty('--t-dress', secs(dress));  // the CSS transitions follow the same phases
+    rootStyle.setProperty('--t-closeup', secs(closeup));
+    rootStyle.setProperty('--t-lift', secs(lift));
+    rootStyle.setProperty('--t-bar', secs(dress + closeup));
+    rootStyle.setProperty('--t-flash', secs(lift * 0.7));
+    rootStyle.setProperty('--t-flash-delay', secs(lift * 0.25));
     function setStage(zoom, liftPct, bright, sat) {
       if (reduceMotion) return;
       rootStyle.setProperty('--zoom', zoom); rootStyle.setProperty('--lift', liftPct + '%');
       rootStyle.setProperty('--bright', bright); rootStyle.setProperty('--sat', sat);
     }
-    // Phase 1: the drone finishes dressing at natural speed while the stage pushes in and the UI steps aside.
+    // Phase 1: the drone finishes dressing while the stage pushes in and the UI steps aside.
     document.body.classList.add('launch');
     setStage(1.22, -2, 1.04, 1.1);
     var t0 = Date.now();
     function dressUp() {
-      // Finish the uniform by the end of the close-up at the latest (a clip that arrives late plays faster).
-      var left = Math.max(0.8, dress - 0.3 - (Date.now() - t0) / 1000);
+      // The rest of the clip plays fast enough to end by dressBy (up to 3x; a clip that arrives late plays faster).
+      var left = Math.max(0.6, dressBy - (Date.now() - t0) / 1000);
       var remaining = Math.max(0.4, p.duration - p.video.currentTime);
       p.video.playbackRate = Math.max(0.35, Math.min(3, remaining / left));
       p.playing = true; p.seeking = false;
@@ -1346,7 +1355,7 @@
       ensureLoaded(site);
       var waitClip = setInterval(function () {
         if (p.ready && p.duration) { clearInterval(waitClip); dressUp(); }
-        else if (Date.now() - t0 > (dress + closeup - 1) * 1000) clearInterval(waitClip);
+        else if (Date.now() - t0 > dressBy * 1000) clearInterval(waitClip);
       }, 100);
     }
     // Phase 2: close-up on the drone in its new uniform.

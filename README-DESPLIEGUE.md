@@ -78,9 +78,11 @@ sola dirección: tranquilo → nota al visitante → se cambia de uniforme → p
   agricultor, operador, piloto o guardia). Los demás destinos se atenúan.
 - Pasa de un destino a otro: el dron se quita el uniforme anterior y luego se pone el nuevo.
 - Teléfono o panel vertical: el dron queda arriba, entero y centrado, y los destinos van en un panel de dos columnas
-  abajo. Al tocar un destino el dron se viste durante el despegue (si su clip aún carga, lo espera).
+  abajo. Al tocar un destino el dron se viste durante el despegue (si su clip aún carga, parte apenas llega).
 - Ventana horizontal angosta: los destinos se muestran como lista abajo a la izquierda.
-- Clic: secuencia de 9 s: el dron termina de vestirse mientras la escena se acerca (≈4,4 s), primer plano del dron con el nombre del destino (3 s), despegue con destello (1,6 s) y navega a la web en la misma pestaña.
+- Clic: despegue de 3 s: el dron termina de vestirse mientras la escena se acerca (1,2 s), primer plano del dron con el nombre
+  del destino (1 s), despegue con destello (0,8 s) y navega a la web en la misma pestaña. La duración total se cambia en
+  `CONFIG.launchSeconds` (`index.html`); las tres fases se reparten solas.
 - Botón «Quiénes somos»: abre el panel del ecosistema HDRONES; al hacer clic en un área, el dron despega hacia esa web.
 - `hdroneschile.cl/academia`, `/asesorias`, `/tienda`, `/agro`, `/servicios`, `/pilotos` y `/antidrones` deben responder 301 a la web correspondiente.
 - En el teléfono: arrastra el dedo hacia un botón para ver la transición; tocar navega.
