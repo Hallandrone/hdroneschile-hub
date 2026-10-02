@@ -334,6 +334,37 @@
   .orbit .dest:hover .tag, .orbit .dest:focus-visible .tag { color: #fff; background: rgba(8, 26, 44, 0.58); }
   .orbit .dest:hover .ico, .orbit .dest:focus-visible .ico { background: var(--c); color: #fff; }
 
+  /* Sheet layout (portrait and near-square screens: phones, narrow panels): the drone stays whole and visible
+     in the upper part of the screen; the destinations sit in a frosted sheet below it. The script sizes both. */
+  .sheet body { background-position: 50% 100%; }
+  .sheet .stage { bottom: var(--sheet-h, 46vh); transform-origin: 50% 56%; }
+  .sheet .stage video { object-position: var(--obj, 50% 50%); }
+  .sheet .shade { background: linear-gradient(0deg, rgba(8, 26, 44, 0.30) 0%, rgba(8, 26, 44, 0) 28%); }
+  .sheet .copy {
+    left: 0; right: 0; bottom: 0; width: auto; box-sizing: border-box;
+    padding: 18px 16px calc(env(safe-area-inset-bottom, 0px) + 58px);
+    gap: 12px;
+    background: linear-gradient(180deg, rgba(12, 38, 66, 0.72), rgba(8, 26, 44, 0.9));
+    -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%);
+    border-radius: 22px 22px 0 0; border-top: 1px solid var(--line);
+    box-shadow: 0 -14px 40px rgba(8, 26, 44, 0.25);
+  }
+  .sheet .headline { gap: 6px; }
+  .sheet .eyebrow { display: none; }
+  .sheet h1 { font-size: clamp(24px, 6.2vw, 34px); line-height: 1; }
+  .sheet h1 br { display: none; }
+  .sheet .dests { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .sheet .dest { grid-template-columns: 30px 1fr; padding: 6px 10px 6px 6px; min-height: 46px; border-radius: 12px; }
+  .sheet .dest:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .sheet .dest .ico { width: 30px; height: 30px; border-radius: 9px; }
+  .sheet .dest .ico svg { width: 17px; height: 17px; }
+  .sheet .dest .name { white-space: normal; font-size: 12.5px; line-height: 1.15; }
+  .sheet .dest .meta, .sheet .dest .tag { display: none; }
+  .sheet .hud { left: 16px; right: 16px; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); padding: 8px 12px; justify-items: start; }
+  .sheet .hud .row { display: none; }
+  .sheet .uniform { width: 100%; }
+  .sheet .meter { flex: 1; width: auto; }
+
   /* Drone telemetry */
   .hud {
     position: fixed; z-index: 4;
@@ -438,7 +469,7 @@
 </style>
 <script>
   // Pick the layout before the first paint: destinations around the drone on wide screens, a list otherwise.
-  (function (w, h) { if (w >= 960 && h >= 560 && w / h >= 1.25) document.documentElement.classList.add('orbit'); })(window.innerWidth, window.innerHeight);
+  (function (w, h, c) { if (w >= 960 && h >= 560 && w / h >= 1.25) c.add('orbit'); else if (w / h < 1.15) c.add('sheet'); })(window.innerWidth, window.innerHeight, document.documentElement.classList);
 </script>
 
 <div class="stage" id="stage">
@@ -503,7 +534,7 @@
 <main class="copy" id="top">
   <div class="headline" id="headline">
     <p class="eyebrow"><b>hdroneschile.cl</b> · un dron, todas nuestras webs</p>
-    <h1>¿A dónde<br>volamos hoy?</h1>
+    <h1>¿A dónde <br>volamos hoy?</h1>
     <p class="hint"><span class="for-mouse">Acerca el cursor a un destino y el dron se irá vistiendo para el viaje. Haz clic y despega.</span><span class="for-touch">Toca un destino y el dron despega hacia esa web.</span></p>
   </div>
 
@@ -637,6 +668,7 @@
   var navEl = document.querySelector('.nav');
   var hudEl = document.querySelector('.hud');
   var headlineEl = document.getElementById('headline');
+  var copyEl = document.querySelector('.copy');
   var orbitRing = document.getElementById('orbit-ring');
   var routeEl = document.getElementById('route');
   var rootStyle = root.style;
@@ -849,9 +881,13 @@
         ['--x', '--y', '--ax', '--p', '--s'].forEach(function (v) { s.el.style.removeProperty(v); });
         s.box = s.anchor = null; s.route = '';
       });
+      var sheet = W / H < 1.15;                     // portrait or near-square: drone above, destinations below
+      root.classList.toggle('sheet', sheet);
+      if (sheet) placeSheet(W, H); else { rootStyle.removeProperty('--sheet-h'); rootStyle.removeProperty('--obj'); }
       measure();
       return;
     }
+    root.classList.remove('sheet'); rootStyle.removeProperty('--sheet-h'); rootStyle.removeProperty('--obj');
     var head = boxOf(headlineEl.getBoundingClientRect(), 16);
     var keep = destHud.textContent;               // measure the telemetry with its longest label
     destHud.textContent = longestUniform;
@@ -898,6 +934,15 @@
     if (!root.classList.contains('placed')) {      // enable the pins' transitions only after they are in place
       requestAnimationFrame(function () { requestAnimationFrame(function () { root.classList.add('placed'); }); });
     }
+  }
+  function placeSheet(W, H) {
+    // The scene fills the space above the sheet (its rounded top overlaps a little) with the drone centred in it.
+    var stageH = Math.max(H * 0.42, H - copyEl.offsetHeight + 20);
+    var s = Math.max(W / 1920, stageH / 1080), fw = 1920 * s, fh = 1080 * s;
+    var ox = Math.min(0, Math.max(W - fw, W / 2 - DRONE.x * fw));
+    var oy = Math.min(0, Math.max(stageH - fh, stageH * 0.56 - DRONE.y * fh));
+    rootStyle.setProperty('--sheet-h', Math.round(H - stageH) + 'px');
+    rootStyle.setProperty('--obj', fx(ox) + 'px ' + fx(oy) + 'px');
   }
   function measure() {
     SITES.forEach(function (s) {
