@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>HDRONES Chile · Academia, asesorías, tienda y servicios de drones</title>
+<meta name="description" content="Punto de entrada a las webs de HDRONES Chile: academia de drones certificada DGAC, asesorías AOC, tienda DJI, drones agrícolas, servicios profesionales, red de pilotos y antidrones. Elige tu destino y despega.">
+<link rel="canonical" href="https://hdroneschile.cl/">
+<meta name="theme-color" content="#0E2A47">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="HDRONES Chile">
+<meta property="og:title" content="HDRONES Chile · ¿A dónde volamos hoy?">
+<meta property="og:description" content="Un dron, todas nuestras webs: academia, asesorías, tienda, agro, servicios, pilotos y antidrones.">
+<meta property="og:url" content="https://hdroneschile.cl/">
+<meta property="og:image" content="https://hdroneschile.cl/media/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E2A47'/%3E%3Ctext x='32' y='42' font-family='Arial Black,Arial,sans-serif' font-weight='900' font-size='30' text-anchor='middle' fill='%23fff'%3EH%3Ctspan fill='%23FF8B3D'%3E//%3C/tspan%3E%3C/text%3E%3C/svg%3E">
+<style>
+  :root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+  body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+  /* Layout: full-bleed video scrubbed by the cursor; glass pill nav on top; headline + destination
+     list bottom-left (the drone looks toward them); telemetry bottom-right. One committed look. */
+  :root {
+    --sky: #8EC5F0;
+    --ink: #0E2A47;
+    --paper: rgba(247, 250, 252, 0.92);
+    --glass: rgba(12, 38, 66, 0.30);
+    --glass-strong: rgba(12, 38, 66, 0.62);
+    --line: rgba(255, 255, 255, 0.26);
+    --rotor: #FF8B3D;
+    --dest: #FF8B3D;            /* takes the active destination's colour */
+    --text: #FFFFFF;
+    --text-soft: rgba(255, 255, 255, 0.86);
+    --shadow: rgba(8, 26, 44, 0.28);
+    --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    --ui: "Figtree", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --gutter: clamp(20px, 5vw, 72px);
+    color-scheme: light;
+  }
+
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: var(--sky) url("media/poster.jpg") center / cover no-repeat;
+    color: var(--text);
+    font-family: var(--ui);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Video layer: one <video> per destination clip, cross-faded */
+  .stage { position: fixed; inset: 0; overflow: hidden; touch-action: none; transition: transform 0.5s ease, filter 0.5s ease; }
+  .stage video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: 50% 50%;
+    pointer-events: none; opacity: 0;
+    transition: opacity 0.26s ease;
+  }
+  .stage video.active { opacity: 1; }
+  .shade {
+    position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(90deg, rgba(8, 26, 44, 0.40) 0%, rgba(8, 26, 44, 0.14) 34%, rgba(8, 26, 44, 0) 54%),
+                linear-gradient(0deg, rgba(8, 26, 44, 0.26) 0%, rgba(8, 26, 44, 0) 36%);
+  }
+  .tint {
+    position: absolute; inset: 0; pointer-events: none;
+    background: var(--dest); mix-blend-mode: soft-light; opacity: 0;
+    transition: background-color 0.3s ease;
+  }
+  body.launch .stage { transform: scale(1.04); filter: brightness(1.06) saturate(1.1); }
+  body.launch .copy, body.launch .hud, body.launch .nav { pointer-events: none; }
+
+  /* Take-off: the stage lifts and brightens, the UI steps aside, a white flash covers the cut to the site */
+  .flash { position: fixed; inset: 0; z-index: 20; pointer-events: none; opacity: 0; background: #FFFFFF; transition: opacity 0.55s ease 0.3s; }
+  .launch-label {
+    position: fixed; z-index: 21; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 44%);
+    transform: translate(-50%, 12px); margin: 0; opacity: 0; pointer-events: none;
+    font: 800 clamp(22px, 3vw, 36px)/1.1 var(--display); letter-spacing: -0.02em; color: var(--text);
+    text-shadow: 0 2px 28px var(--shadow); white-space: nowrap;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  body.launch .launch-label { opacity: 1; transform: translate(-50%, 0); }
+  body.takeoff .stage { transform: scale(1.24) translateY(-7%); filter: brightness(1.4) saturate(1.1); transition: transform 0.9s cubic-bezier(0.3, 0.7, 0.2, 1), filter 0.9s ease; }
+  body.takeoff .copy, body.takeoff .hud, body.takeoff .nav, body.takeoff .about { opacity: 0; transform: translateY(14px); transition: opacity 0.4s ease, transform 0.5s ease; }
+  body.takeoff .nav { transform: translate(-50%, -14px); }
+  body.takeoff .flash { opacity: 1; }
+  body.takeoff .launch-label { opacity: 0; transform: translate(-50%, -24px); transition-delay: 0.25s; }
+
+  /* Navigation */
+  .nav {
+    position: fixed; z-index: 5;
+    top: calc(env(safe-area-inset-top, 0px) + 16px);
+    left: 50%; transform: translateX(-50%);
+    width: min(880px, calc(100% - 32px)); height: 50px;
+    box-sizing: border-box;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding-inline: 22px 8px;
+    border-radius: 999px;
+    background: var(--glass);
+    border: 1px solid var(--line);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: 0 10px 30px rgba(8, 24, 40, 0.18);
+  }
+  .logo {
+    font-family: var(--display); font-weight: 800; font-size: 17px; letter-spacing: 0.01em;
+    color: var(--text); text-decoration: none; white-space: nowrap;
+  }
+  .logo span { color: var(--rotor); }
+  .logo small { font: 600 11px/1 var(--mono); letter-spacing: 0.08em; color: var(--text-soft); margin-left: 8px; text-transform: uppercase; }
+  .nav ul { display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 0; }
+  .nav a, .nav button {
+    font: 600 14px/1 var(--ui); color: var(--text-soft);
+    text-decoration: none; background: none; border: 0; cursor: pointer;
+    padding: 11px 13px; border-radius: 999px; white-space: nowrap;
+  }
+  .nav a:hover, .nav button:hover { color: var(--text); background: rgba(255, 255, 255, 0.12); }
+  .nav a[aria-current="page"] { color: var(--text); }
+  .nav a:focus-visible, .nav button:focus-visible { outline: 2px solid var(--rotor); outline-offset: 2px; }
+  .status {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: 600 14px/1 var(--ui); color: var(--text-soft);
+    padding: 11px 13px; white-space: nowrap;
+  }
+  .status b { color: var(--text); font-weight: 600; min-width: 5.2em; }
+  .status i {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--dest); box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.14);
+    transition: background-color 0.25s ease;
+  }
+
+  .about {
+    position: fixed; z-index: 6;
+    top: calc(env(safe-area-inset-top, 0px) + 76px);
+    right: max(16px, calc(50% - 440px));
+    width: min(340px, calc(100% - 32px)); box-sizing: border-box;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: var(--glass-strong);
+    border: 1px solid var(--line);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    box-shadow: 0 18px 40px rgba(8, 24, 40, 0.28);
+    font: 500 14px/1.55 var(--ui); color: var(--text);
+  }
+  .about h2 { margin: 0 0 6px; font: 800 18px/1.2 var(--display); letter-spacing: -0.01em; }
+  .about p { margin: 0 0 8px; color: var(--text-soft); }
+  .about p:last-child { margin: 0; }
+  .about code { font: 500 12.5px/1 var(--mono); color: var(--text); background: rgba(255, 255, 255, 0.12); padding: 2px 6px; border-radius: 6px; }
+
+  /* Headline and destinations */
+  .copy {
+    position: fixed; z-index: 4;
+    left: var(--gutter);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(24px, 6vh, 64px));
+    display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
+    width: min(600px, calc(100% - 2 * var(--gutter)));
+  }
+  .eyebrow {
+    margin: 0;
+    font: 500 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-soft); text-shadow: 0 1px 10px var(--shadow);
+  }
+  .eyebrow b { color: var(--text); font-weight: 500; }
+  h1 {
+    margin: 0;
+    font-family: var(--display); font-weight: 800;
+    font-size: clamp(34px, 4.2vw, 64px); line-height: 0.92; letter-spacing: -0.045em;
+    color: var(--text);
+    text-shadow: 0 2px 28px var(--shadow);
+    text-wrap: balance;
+  }
+  .dests { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; }
+  .dest {
+    display: grid; grid-template-columns: 36px 1fr auto; align-items: center; gap: 10px;
+    width: 100%; box-sizing: border-box; min-width: 0;
+    padding: 8px 10px 8px 8px;
+    border-radius: 13px;
+    text-decoration: none; color: var(--text);
+    background: var(--glass);
+    border: 1px solid var(--line);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    backdrop-filter: blur(12px) saturate(140%);
+    box-shadow: 0 10px 28px rgba(8, 26, 44, 0.16);
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+  }
+  .dest:hover, .dest:focus-visible {
+    background: var(--paper); color: var(--ink);
+    border-color: rgba(255, 255, 255, 0.85);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 34px rgba(8, 26, 44, 0.28);
+  }
+  .dest.near { border-color: var(--dest); }
+  .dest:focus-visible { outline: 3px solid var(--rotor); outline-offset: 3px; }
+  .dest .ico {
+    width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center;
+    background: rgba(255, 255, 255, 0.12); color: var(--text);
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .dest:hover .ico, .dest:focus-visible .ico { background: var(--dest); color: #fff; }
+  .dest .ico svg { width: 20px; height: 20px; display: block; }
+  .dest .txt { display: grid; gap: 2px; min-width: 0; }
+  .dest .name { font: 600 13.5px/1.15 var(--ui); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dest .meta {
+    font: 500 11px/1.2 var(--mono); letter-spacing: 0.01em;
+    color: var(--text-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .dest:hover .meta, .dest:focus-visible .meta { color: rgba(14, 42, 71, 0.72); }
+  .dest .meta em { font-style: normal; opacity: 0.75; }
+  .dest .tag {
+    font: 600 10.5px/1 var(--ui); letter-spacing: 0.04em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 8px; border-radius: 999px;
+    color: var(--text-soft); background: rgba(255, 255, 255, 0.10);
+    white-space: nowrap;
+  }
+  .dest .tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--c, var(--rotor)); }
+  .dest:hover .tag, .dest:focus-visible .tag { color: var(--ink); background: rgba(14, 42, 71, 0.08); }
+  @media (max-width: 1500px) { .dest .tag { display: none; } .dest { grid-template-columns: 36px 1fr; } }
+
+  /* Drone telemetry */
+  .hud {
+    position: fixed; z-index: 4;
+    right: var(--gutter);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 26px);
+    display: grid; gap: 10px; justify-items: end;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: rgba(8, 26, 44, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    font: 500 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.94);
+    text-shadow: 0 1px 8px rgba(8, 26, 44, 0.4);
+    font-variant-numeric: tabular-nums;
+  }
+  .hud .row { display: flex; gap: 18px; }
+  .hud .dim { color: rgba(255, 255, 255, 0.7); }
+  .uniform { display: flex; align-items: center; gap: 12px; }
+  .uniform b { font-weight: 500; color: var(--text); }
+  .meter { width: 180px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.28); overflow: hidden; }
+  .meter i {
+    display: block; width: 100%; height: 100%;
+    transform-origin: left center; transform: scaleX(0);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), var(--dest));
+  }
+
+  /* Cursor ring (mouse only) */
+  .ring {
+    position: fixed; z-index: 10; left: 0; top: 0;
+    width: 36px; height: 36px; margin: -18px 0 0 -18px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    background: rgba(14, 42, 71, 0.22);
+    pointer-events: none; opacity: 0;
+    transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease, margin 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+    will-change: transform;
+  }
+  .ring.on { opacity: 1; }
+  .ring.hot { width: 56px; height: 56px; margin: -28px 0 0 -28px; border-color: var(--dest); background: rgba(255, 255, 255, 0.14); }
+  @media (hover: none), (pointer: coarse) { .ring { display: none; } }
+
+  /* Portrait screens: keep the drone centred */
+  @media (max-aspect-ratio: 1/1) {
+    .stage video { object-position: calc(50vw - 113.78vh) 50%; }
+    .shade { background: linear-gradient(0deg, rgba(8, 26, 44, 0.58) 0%, rgba(8, 26, 44, 0.22) 42%, rgba(8, 26, 44, 0) 62%); }
+  }
+
+  @media (max-height: 760px) {
+    .copy { gap: 10px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); }
+    h1 { font-size: clamp(28px, 3.4vw, 44px); }
+    .eyebrow { display: none; }
+    .dest { padding: 6px 8px 6px 6px; }
+    .dest .meta { display: none; }
+    .hud .row { display: none; }
+  }
+
+  @media (max-width: 720px) {
+    .nav { padding-inline: 18px 6px; }
+    .nav .home, .logo small { display: none; }
+    .nav a, .nav button, .status { padding: 10px 9px; font-size: 13px; }
+    .copy { left: 16px; right: 16px; width: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 64px); gap: 10px; }
+    h1 { font-size: clamp(30px, 9vw, 44px); }
+    .dests { grid-template-columns: 1fr; gap: 6px; }
+    .dest { grid-template-columns: 32px 1fr; padding: 6px 8px 6px 6px; }
+    .dest .ico { width: 32px; height: 32px; border-radius: 9px; }
+    .dest .ico svg { width: 18px; height: 18px; }
+    .dest .meta { display: none; }
+    .dest .tag { display: none; }
+    .hud { left: 16px; right: 16px; justify-items: start; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); padding: 8px 12px; }
+    .hud .row { display: none; }
+    .uniform { width: 100%; }
+    .meter { flex: 1; width: auto; }
+  }
+  @media (max-width: 480px) {
+    .status .lbl { display: none; }
+    .eyebrow { font-size: 11px; letter-spacing: 0.06em; }
+  }
+  @media (max-width: 400px) {
+    .logo { font-size: 15px; }
+    .status b { min-width: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dest, .ring, .status i, .stage, .stage video, .tint, .flash, .launch-label { transition: none; }
+    body.launch .stage, body.takeoff .stage { transform: none; filter: none; }
+    body.takeoff .copy, body.takeoff .hud, body.takeoff .nav { transform: none; }
+  }
+</style>
+
+<div class="stage" id="stage">
+  <div class="shade"></div>
+  <div class="tint" id="tint"></div>
+</div>
+
+<nav class="nav" aria-label="Principal">
+  <a class="logo" href="#top">HDRONES<span>//</span><small>Chile</small></a>
+  <ul>
+    <li class="home"><a href="#top" aria-current="page">Inicio</a></li>
+    <li><span class="status" aria-live="polite"><i></i><span class="lbl">Destino:&nbsp;</span><b id="dest-nav">—</b></span></li>
+    <li><button type="button" id="about-btn" aria-expanded="false" aria-controls="about">Cómo funciona</button></li>
+  </ul>
+</nav>
+
+<section class="about" id="about" hidden>
+  <h2>Un dron, todas nuestras webs</h2>
+  <p>El dron reacciona a tu cursor. Mientras te acercas a un destino se va cambiando de uniforme según la web a la que te va a llevar; al pulsar el botón, despega hacia allá. En el teléfono, arrastra el dedo hacia un botón.</p>
+  <p>Atajos directos: <code>hdroneschile.cl/academia</code>, <code>/asesorias</code>, <code>/tienda</code>, <code>/agro</code>, <code>/servicios</code>, <code>/pilotos</code> y <code>/antidrones</code>.</p>
+</section>
+
+<main class="copy" id="top">
+  <p class="eyebrow"><b>hdroneschile.cl</b> · un dron, todas nuestras webs</p>
+  <h1>¿A dónde<br>volamos hoy?</h1>
+
+  <nav class="dests" id="dests" aria-label="Nuestras webs">
+    <a class="dest" id="dest-academia" href="https://www.academiadronchile.cl/"
+       data-clip="academia" data-short="Academia" data-uniform="Instructor" data-color="#4DA3FF" data-path="/academia" style="--c:#4DA3FF">
+      <span class="ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5c1.2-3.6 4.2-5.5 8-5.5s6.8 1.9 8 5.5"/><path d="M3 12.5h18v1.2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 7V4.8"/><path d="M9.5 18.5h5"/></svg>
+      </span>
+      <span class="txt">
+        <span class="name">Academia de Drones</span>
+        <span class="meta">academiadronchile.cl <em>· /academia</em></span>
+      </span>
+      <span class="tag">Instructor</span>
+    </a>
+
+    <a class="dest" id="dest-asesorias" href="https://asesoriasdedrones.cl/"
+       data-clip="asesorias" data-short="Asesorías" data-uniform="Asesor DGAC" data-color="#9B7BFF" data-path="/asesorias" style="--c:#9B7BFF">
+      <span class="ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7.5L19 8v12.5H7z"/><path d="M14.5 3.5V8H19"/><path d="M9.5 12h7M9.5 15.5h7"/><path d="M4.5 8.5v12.5h10"/></svg>
+      </span>
+      <span class="txt">
+        <span class="name">Asesorías AOC y RPA</span>
+        <span class="meta">asesoriasdedrones.cl <em>· /asesorias</em></span>
+      </span>
+      <span class="tag">Asesor</span>
+    </a>
+
+    <a class="dest" id="dest-tienda" href="https://ventadronchile.cl/"
+       data-clip="tienda" data-short="Tienda" data-uniform="Vendedor" data-color="#FF8B3D" data-path="/tienda" style="--c:#FF8B3D">
+      <span class="ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5h14l-1 11.5H6z"/><path d="M8.5 8.5V7a3.5 3.5 0 0 1 7 0v1.5"/><path d="M9.5 12.5h5"/></svg>
+      </span>
+      <span class="txt">
+        <span class="name">Tienda DJI</span>
+        <span class="meta">ventadronchile.cl <em>· /tienda</em></span>
+      </span>
+      <span class="tag">Vendedor</span>
+    </a>
+
+    <a class="dest" id="dest-agro" href="https://agricolatech.cl/"
+       data-clip="agro" data-short="Agrícola" data-uniform="Agricultor" data-color="#6CCB5F" data-path="/agro" style="--c:#6CCB5F">
+      <span class="ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5V11"/><path d="M12 11c-4.5 0-7-2.6-7-6.5 4.5 0 7 2.6 7 6.5z"/><path d="M12 14c4.5 0 7-2.6 7-6.5-4.5 0-7 2.6-7 6.5z"/><path d="M5.5 20.5h13"/></svg>
+      </span>
+      <span class="txt">
+        <span class="name">Drones agrícolas</span>
+        <span class="meta">agricolatech.cl <em>· /agro</em></span>
+      </span>
+      <span class="tag">Agricultor</span>
+    </a>
+
+    <a class="dest" id="dest-servicios" href="https://hdronestech.cl/"
+       data-clip="servicios" data-short="Servicios" data-uniform="Operador industrial" data-color="#FFC24A" data-path="/servicios" style="--c:#FFC24A">
+      <span class="ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 15.5a7.5 7.5 0 0 1 15 0"/><path d="M3 15.5h18"/><path d="M12 8V5"/><path d="M9.5 18.5h5"/></svg>
+      </span>
+      <span class="txt">
+        <span class="name">Servicios con drones</span>
+        <span class="meta">hdronestech.cl <em>· /servicios</em></span>
+      </span>
+      <span class="tag">Operador</span>
+    </a>
+
+    <a class="dest" id="dest-pilotos" href="https://pilotodedrones.cl/"
+       data-clip="pilotos" data-short="Pilotos" data-uniform="Piloto profesional" data-color="#E05A8C" data-path="/pilotos" style="--c:#E05A8C">
+      <span class="ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.5-5.5 7-5.5s6.2 1.9 7 5.5"/><path d="M2.5 11.5 6 10M21.5 11.5 18 10"/></svg>
+      </span>
+      <span class="txt">
+        <span class="name">Red de pilotos</span>
+        <span class="meta">pilotodedrones.cl <em>· /pilotos</em></span>
+      </span>
+      <span class="tag">Piloto</span>
+    </a>
+
+    <a class="dest" id="dest-antidrones" href="https://antidrones.cl/"
+       data-clip="antidrones" data-short="Antidrones" data-uniform="Guardia de seguridad" data-color="#5FD3D3" data-path="/antidrones" style="--c:#5FD3D3">
+      <span class="ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 5 6v6c0 4.2 3 7.4 7 8.5 4-1.1 7-4.3 7-8.5V6z"/><path d="M9 12.2l2 2 4-4.2"/></svg>
+      </span>
+      <span class="txt">
+        <span class="name">Antidrones</span>
+        <span class="meta">antidrones.cl <em>· /antidrones</em></span>
+      </span>
+      <span class="tag">Guardia</span>
+    </a>
+  </nav>
+</main>
+
+<div class="hud" aria-hidden="true">
+  <div class="row">
+    <span><span class="dim">AOC</span> DGAC 1688</span>
+    <span><span class="dim">BAT</span> 86%</span>
+    <span><span class="dim">LINK</span> <span id="link">0%</span></span>
+    <span><span class="dim">CLIP</span> <span id="clip">base</span></span>
+  </div>
+  <div class="uniform">
+    <span><span class="dim">UNIFORME</span> <b id="dest-hud">—</b> <span id="pct">00</span>%</span>
+    <div class="meter"><i id="meter-fill"></i></div>
+  </div>
+</div>
+
+<div class="ring" id="ring" aria-hidden="true"></div>
+<div class="flash" aria-hidden="true"></div>
+<p class="launch-label" id="launch-label" aria-live="polite"></p>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var tint = document.getElementById('tint');
+  var ring = document.getElementById('ring');
+  var linkEl = document.getElementById('link');
+  var clipEl = document.getElementById('clip');
+  var pctEl = document.getElementById('pct');
+  var meterFill = document.getElementById('meter-fill');
+  var destNav = document.getElementById('dest-nav');
+  var destHud = document.getElementById('dest-hud');
+  var aboutBtn = document.getElementById('about-btn');
+  var aboutPanel = document.getElementById('about');
+  var launchEl = document.getElementById('launch-label');
+
+  // Tuning: how cursor distance to a destination maps to that destination's clip.
+  var CONFIG = {
+    influence: 0.5,            // share of the shorter viewport side where a destination starts reacting
+    minInfluence: 260, maxInfluence: 560,
+    curve: [[1, 0], [0.6, 0.3], [0.15, 0.72], [0, 1]], // [distance ratio, clip progress]
+    response: 0.14,            // smoothing per animation frame (0-1)
+    seekFps: 30,               // max seeks per second per clip
+    fps: 24,                   // frame rate of the clips
+    fallbackMax: 0.42,         // destinations without their own clip reuse the base clip up to here (eyes open, looking)
+    launchMs: 900              // longest wait for the uniform to finish before leaving
+  };
+  var reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var embedded = false;
+  try { embedded = window.top !== window.self; } catch (e) { embedded = true; }
+
+  // ---- Destinations come from the markup: one <a class="dest"> each -------------------------
+  var SITES = [].slice.call(document.querySelectorAll('.dest')).map(function (a) {
+    return {
+      el: a, url: a.href, id: a.getAttribute('data-clip'),
+      shortName: a.getAttribute('data-short') || a.textContent.trim(),
+      uniform: a.getAttribute('data-uniform') || '', color: a.getAttribute('data-color') || '#FF8B3D',
+      clipKey: a.getAttribute('data-clip'), max: 1, checked: false
+    };
+  });
+
+  // ---- Clip files -----------------------------------------------------------------------------
+  var canMp4 = !!document.createElement('video').canPlayType('video/mp4; codecs="avc1.640028"');
+  var canWebm = !!document.createElement('video').canPlayType('video/webm; codecs="vp9"');
+  var large = window.innerWidth >= 900 && window.innerWidth * (window.devicePixelRatio || 1) >= 1500;
+  function srcFor(key) {
+    var stem = key === 'base' ? 'media/dron' : 'media/' + key;
+    return canMp4 ? stem + (large ? '-1080.mp4' : '-720.mp4') : (canWebm ? stem + '-720.webm' : stem + '-720.mp4');
+  }
+
+  var players = {};     // key -> player
+  var active = null;    // active site
+  var launching = false;
+
+  function makePlayer(key) {
+    var video = document.createElement('video');
+    video.muted = true; video.playsInline = true; video.setAttribute('playsinline', '');
+    video.preload = 'auto'; video.setAttribute('aria-hidden', 'true'); video.tabIndex = -1;
+    stage.insertBefore(video, stage.firstChild);
+    var p = { key: key, video: video, src: srcFor(key), duration: 0, ready: false, loading: false, playing: false,
+              cur: 0, tgt: 0, seeking: false, seekStarted: 0, lastSeek: 0, usingBlob: false };
+    video.addEventListener('error', function () {
+      if (p.usingBlob) { p.usingBlob = false; video.src = p.src; }
+      else if (key !== 'base') demote(key);
+    });
+    video.addEventListener('loadedmetadata', function () {
+      p.duration = isFinite(video.duration) && video.duration > 0 ? video.duration : 5;
+    });
+    video.addEventListener('loadeddata', function () {
+      if (p.ready) return;
+      p.ready = true;
+      if (active && playerOf(active) === p) setLink('OK');
+      var pr = video.play();   // prime the decoder (some mobile browsers), then park on frame one
+      if (pr && pr.then) {
+        pr.then(function () { video.pause(); video.currentTime = 0.001; kick(); })
+          .catch(function () { video.currentTime = 0.001; kick(); });
+      } else { video.pause(); video.currentTime = 0.001; kick(); }
+    });
+    video.addEventListener('seeked', function () { p.seeking = false; kick(); });
+    players[key] = p;
+    return p;
+  }
+
+  function demote(key) {
+    // A destination has no clip of its own yet: reuse the base clip, limited to the "looking" range.
+    var p = players[key];
+    if (p) { if (p.video.parentNode) p.video.parentNode.removeChild(p.video); delete players[key]; }
+    SITES.forEach(function (s) { if (s.id === key) { s.clipKey = 'base'; s.max = CONFIG.fallbackMax; } });
+    if (active && active.id === key) { applyActive(); }
+  }
+
+  function load(p) {
+    if (p.loading) return;
+    p.loading = true;
+    var showLink = function (v) { if (active && playerOf(active) === p) setLink(v); };
+    if (!window.fetch) { p.video.src = p.src; return; }
+    fetch(p.src).then(function (res) {
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var total = +res.headers.get('content-length') || 0;
+      if (!res.body || !total) return res.blob();
+      var reader = res.body.getReader(), chunks = [], got = 0;
+      function pump() {
+        return reader.read().then(function (r) {
+          if (r.done) return new Blob(chunks, { type: p.src.slice(-4) === 'webm' ? 'video/webm' : 'video/mp4' });
+          chunks.push(r.value); got += r.value.length;
+          showLink(Math.min(99, Math.round(got / total * 100)) + '%');
+          return pump();
+        });
+      }
+      return pump();
+    }).then(function (blob) {
+      p.usingBlob = true;
+      p.video.src = URL.createObjectURL(blob);
+    }).catch(function (err) {
+      if (p.key !== 'base' && /HTTP 4\d\d/.test(String(err && err.message))) { demote(p.key); return; }
+      p.usingBlob = false;
+      p.video.src = p.src;
+    });
+  }
+
+  function playerOf(site) { return players[site.clipKey] || makePlayer(site.clipKey); }
+  function ensureLoaded(site) { var p = playerOf(site); load(p); return p; }
+
+  // Find out early which destinations already have their own clip.
+  if (window.fetch) {
+    SITES.forEach(function (s) {
+      fetch(srcFor(s.id), { method: 'HEAD' }).then(function (res) {
+        s.checked = true;
+        if (res.status === 404 || res.status === 403) demote(s.id);
+      }).catch(function () { s.checked = true; });
+    });
+  }
+
+  // ---- Distance to a destination -> clip progress ---------------------------------------------
+  function rectDist(x, y, r) {
+    var dx = Math.max(r.left - x, 0, x - r.right);
+    var dy = Math.max(r.top - y, 0, y - r.bottom);
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+  function influence() {
+    var side = Math.min(window.innerWidth, window.innerHeight) * CONFIG.influence;
+    return Math.max(CONFIG.minInfluence, Math.min(CONFIG.maxInfluence, side));
+  }
+  function curve(ratio) {
+    var c = CONFIG.curve;
+    for (var i = 0; i < c.length - 1; i++) {
+      var r0 = c[i][0], p0 = c[i][1], r1 = c[i + 1][0], p1 = c[i + 1][1];
+      if (ratio <= r0 && ratio >= r1) return p1 + (p0 - p1) * ((ratio - r1) / ((r0 - r1) || 1));
+    }
+    return ratio >= 1 ? 0 : 1;
+  }
+  function nearest(x, y) {
+    var best = null, bestD = Infinity;
+    SITES.forEach(function (s) {
+      var d = rectDist(x, y, s.el.getBoundingClientRect());
+      if (d < bestD) { bestD = d; best = s; }
+    });
+    return { site: best, progress: curve(Math.min(1, bestD / influence())) };
+  }
+
+  // ---- Active destination ----------------------------------------------------------------------
+  function setLink(v) { linkEl.textContent = v; }
+  function setActive(site, progress) {
+    if (launching) return;
+    if (site !== active) {
+      active = site;
+      applyActive();
+    }
+    for (var k in players) players[k].tgt = 0;
+    if (site) {
+      var p = ensureLoaded(site);
+      p.tgt = Math.max(0, Math.min(1, progress)) * site.max;
+      if (p.ready) setLink('OK');
+    }
+    kick();
+  }
+  function applyActive() {
+    SITES.forEach(function (s) { s.el.classList.toggle('near', s === active); });
+    for (var k in players) players[k].video.classList.remove('active');
+    if (!active) return;
+    var p = playerOf(active);
+    p.video.classList.add('active');
+    document.documentElement.style.setProperty('--dest', active.color);
+    destNav.textContent = active.shortName;
+    destHud.textContent = active.uniform || active.shortName;
+    clipEl.textContent = active.clipKey === 'base' ? 'base' : active.clipKey;
+    if (!p.ready) setLink(p.loading ? '…' : '0%');
+  }
+
+  // ---- Animation loop: smooth, then seek (throttled) ------------------------------------------
+  var raf = 0;
+  function kick() { if (!raf) raf = requestAnimationFrame(tick); }
+  function tick(now) {
+    raf = 0;
+    var busy = false, k = reduceMotion ? 1 : CONFIG.response;
+    for (var key in players) {
+      var p = players[key];
+      if (p.playing) { p.cur = p.duration ? p.video.currentTime / p.duration : 1; busy = true; continue; }
+      p.cur += (p.tgt - p.cur) * k;
+      if (Math.abs(p.tgt - p.cur) < 0.0008) p.cur = p.tgt;
+      if (p.ready && p.duration) {
+        var t = Math.min(p.duration - 0.05, Math.max(0.001, p.cur * p.duration));
+        var halfFrame = 0.5 / CONFIG.fps;
+        if (p.seeking && now - p.seekStarted > 400) p.seeking = false;
+        if (!p.seeking && now - p.lastSeek >= 1000 / CONFIG.seekFps && Math.abs(t - p.video.currentTime) > halfFrame) {
+          p.seeking = true; p.seekStarted = p.lastSeek = now;
+          p.video.currentTime = t;
+        }
+        if (p.cur !== p.tgt || p.seeking || Math.abs(t - p.video.currentTime) > halfFrame) busy = true;
+      } else if (p.cur !== p.tgt) busy = true;
+    }
+    render();
+    if (busy) kick();
+  }
+  function render() {
+    var p = active ? players[active.clipKey] : null;
+    var shown = p && active ? Math.min(1, p.cur / (active.max || 1)) : 0;
+    pctEl.textContent = String(Math.round(shown * 100)).padStart(2, '0');
+    meterFill.style.transform = 'scaleX(' + shown.toFixed(3) + ')';
+    tint.style.opacity = (shown * 0.35).toFixed(3);
+  }
+
+  // ---- Pointer input ---------------------------------------------------------------------------
+  var pointer = null, releaseTimer = 0;
+  var ringX = 0, ringY = 0, ringTX = 0, ringTY = 0, ringRaf = 0, ringSeen = false;
+  function moveRing(x, y) {
+    ringTX = x; ringTY = y;
+    if (!ringSeen) { ringX = x; ringY = y; ringSeen = true; }
+    ring.classList.add('on');
+    if (!ringRaf) ringRaf = requestAnimationFrame(stepRing);
+  }
+  function stepRing() {
+    var k = reduceMotion ? 1 : 0.28;
+    ringX += (ringTX - ringX) * k; ringY += (ringTY - ringY) * k;
+    ring.style.transform = 'translate3d(' + ringX.toFixed(1) + 'px,' + ringY.toFixed(1) + 'px,0)';
+    ringRaf = (Math.abs(ringTX - ringX) + Math.abs(ringTY - ringY) > 0.3) ? requestAnimationFrame(stepRing) : 0;
+  }
+  function follow(x, y) { var n = nearest(x, y); setActive(n.site, n.progress); }
+
+  window.addEventListener('pointermove', function (e) {
+    if (e.pointerType === 'touch') {
+      if (e.buttons) { clearTimeout(releaseTimer); follow(e.clientX, e.clientY); }
+      return;
+    }
+    pointer = { x: e.clientX, y: e.clientY };
+    moveRing(e.clientX, e.clientY);
+    follow(e.clientX, e.clientY);
+  }, { passive: true });
+  window.addEventListener('pointerdown', function (e) {
+    if (e.pointerType === 'touch') { clearTimeout(releaseTimer); follow(e.clientX, e.clientY); }
+  }, { passive: true });
+  window.addEventListener('pointerup', function (e) {
+    if (e.pointerType === 'touch') releaseTimer = setTimeout(function () { setActive(active, 0); }, 700);
+  }, { passive: true });
+  document.documentElement.addEventListener('mouseleave', function () {
+    pointer = null; ring.classList.remove('on'); setActive(active, 0);
+  });
+  window.addEventListener('blur', function () { pointer = null; setActive(active, 0); });
+  window.addEventListener('resize', function () { if (pointer) follow(pointer.x, pointer.y); });
+
+  SITES.forEach(function (s) {
+    s.el.addEventListener('pointerenter', function () { ring.classList.add('hot'); ensureLoaded(s); });
+    s.el.addEventListener('pointerleave', function () { ring.classList.remove('hot'); });
+    s.el.addEventListener('focus', function () { if (s.el.matches(':focus-visible')) setActive(s, 0.85); });
+    s.el.addEventListener('blur', function () { if (pointer) follow(pointer.x, pointer.y); else setActive(active, 0); });
+
+    // Click: the drone finishes dressing at natural speed (about 3 s), takes off, then we go to the site.
+    s.el.addEventListener('click', function (e) {
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      if (launching) { e.preventDefault(); return; }
+      if (embedded) {                                    // inside a preview frame the link opens in a new tab on its own
+        s.el.target = '_blank'; s.el.rel = 'noopener';
+        launch(s, null);
+        return;
+      }
+      e.preventDefault();
+      launch(s, s.url);
+    });
+  });
+
+  function launch(site, url) {
+    launching = true;
+    if (site !== active) { active = site; applyActive(); }
+    document.body.classList.add('launch');
+    launchEl.textContent = 'Despegando hacia ' + site.shortName + '…';
+    var p = playerOf(site), done = false, timer = 0;
+    function takeoff() {
+      if (done) return;
+      done = true; clearTimeout(timer);
+      p.video.removeEventListener('ended', takeoff);
+      document.body.classList.add('takeoff');
+      setTimeout(function () {
+        if (url) { window.location.href = url; return; }
+        // No navigation here (preview): reset the stage after the show
+        setTimeout(function () {
+          document.body.classList.remove('launch', 'takeoff');
+          p.playing = false; p.video.pause(); p.cur = p.tgt = 0; p.video.currentTime = 0.001;
+          launchEl.textContent = ''; launching = false; kick();
+        }, 700);
+      }, reduceMotion ? 150 : 850);
+    }
+    if (p.ready && p.duration) {
+      var remaining = Math.max(0.3, p.duration - p.video.currentTime);
+      p.video.playbackRate = Math.max(0.5, Math.min(2, remaining / 2.6)); // whole trip ≈ 2.6 s + take-off
+      p.playing = true; p.seeking = false;
+      p.video.addEventListener('ended', takeoff);
+      var pr = p.video.play();
+      if (pr && pr.catch) pr.catch(function () { takeoff(); });
+      timer = setTimeout(takeoff, 3400);
+    } else {
+      timer = setTimeout(takeoff, 500);
+    }
+  }
+
+  // ---- About panel -----------------------------------------------------------------------------
+  function setAbout(open) {
+    aboutPanel.hidden = !open;
+    aboutBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  aboutBtn.addEventListener('click', function (e) { e.stopPropagation(); setAbout(aboutPanel.hidden); });
+  document.addEventListener('click', function (e) {
+    if (!aboutPanel.hidden && !aboutPanel.contains(e.target) && e.target !== aboutBtn) setAbout(false);
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setAbout(false); });
+
+  // ---- Boot ------------------------------------------------------------------------------------
+  // #academia, #asesorias, #tienda… deep-link to a destination.
+  var hash = (location.hash || '').replace('#', '');
+  var deep = null;
+  SITES.forEach(function (s) { if (s.id === hash) deep = s; });
+  active = deep || SITES[0];
+  applyActive();
+  load(makePlayer('base'));
+  if (deep) { deep.el.focus(); setActive(deep, 0.85); }
+  render();
+})();
+</script>
+
+</body>
+</html>

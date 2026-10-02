@@ -1,0 +1,232 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "bash build.sh",
+  "outputDirectory": "public",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/academia",
+      "destination": "https://www.academiadronchile.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/academia/:path*",
+      "destination": "https://www.academiadronchile.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/asesorias",
+      "destination": "https://asesoriasdedrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/asesorias/:path*",
+      "destination": "https://asesoriasdedrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/tienda",
+      "destination": "https://ventadronchile.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/tienda/:path*",
+      "destination": "https://ventadronchile.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/agro",
+      "destination": "https://agricolatech.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/agro/:path*",
+      "destination": "https://agricolatech.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios",
+      "destination": "https://hdronestech.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/servicios/:path*",
+      "destination": "https://hdronestech.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/pilotos",
+      "destination": "https://pilotodedrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/pilotos/:path*",
+      "destination": "https://pilotodedrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/antidrones",
+      "destination": "https://antidrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/antidrones/:path*",
+      "destination": "https://antidrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/cursos",
+      "destination": "https://www.academiadronchile.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/escuela",
+      "destination": "https://www.academiadronchile.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "destination": "https://www.academiadronchile.cl/blog/",
+      "permanent": true
+    },
+    {
+      "source": "/asesoria",
+      "destination": "https://asesoriasdedrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/aoc",
+      "destination": "https://asesoriasdedrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/store",
+      "destination": "https://ventadronchile.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/shop",
+      "destination": "https://ventadronchile.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/agricola",
+      "destination": "https://agricolatech.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/precios",
+      "destination": "https://preciosdedrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "academia.hdroneschile.cl"
+        }
+      ],
+      "destination": "https://www.academiadronchile.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "asesorias.hdroneschile.cl"
+        }
+      ],
+      "destination": "https://asesoriasdedrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "tienda.hdroneschile.cl"
+        }
+      ],
+      "destination": "https://ventadronchile.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "agro.hdroneschile.cl"
+        }
+      ],
+      "destination": "https://agricolatech.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "servicios.hdroneschile.cl"
+        }
+      ],
+      "destination": "https://hdronestech.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "pilotos.hdroneschile.cl"
+        }
+      ],
+      "destination": "https://pilotodedrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "antidrones.hdroneschile.cl"
+        }
+      ],
+      "destination": "https://antidrones.cl/",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.hdroneschile.cl"
+        }
+      ],
+      "destination": "https://hdroneschile.cl/:path*",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/media/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    }
+  ]
+}
