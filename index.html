@@ -62,6 +62,8 @@
      (origin ≈ where it hovers) as the cursor approaches, and much more during the take-off sequence. */
   .stage {
     position: fixed; inset: 0; overflow: hidden; touch-action: none;
+    background: url("media/poster.jpg") no-repeat;      /* frame one until a clip is in, placed like the clips */
+    background-size: cover; background-position: var(--obj, 50% 50%);
     transform-origin: 62% 48%;
     transform: translateY(var(--lift, 0%)) scale(var(--zoom, 1));
     filter: brightness(var(--bright, 1)) saturate(var(--sat, 1));
@@ -751,9 +753,9 @@
       if (active && playerOf(active) === p) setLink('OK');
       var pr = video.play();   // prime the decoder (some mobile browsers), then park on frame one
       if (pr && pr.then) {
-        pr.then(function () { video.pause(); video.currentTime = 0.001; kick(); })
-          .catch(function () { video.currentTime = 0.001; kick(); });
-      } else { video.pause(); video.currentTime = 0.001; kick(); }
+        pr.then(function () { if (!p.playing) { video.pause(); video.currentTime = 0.001; } kick(); })
+          .catch(function () { if (!p.playing) video.currentTime = 0.001; kick(); });
+      } else if (!p.playing) { video.pause(); video.currentTime = 0.001; kick(); }
     });
     video.addEventListener('seeked', function () { p.seeking = false; kick(); });
     players[key] = p;
@@ -1167,14 +1169,25 @@
     // Phase 1: the drone finishes dressing at natural speed while the stage pushes in and the UI steps aside.
     document.body.classList.add('launch');
     setStage(1.22, -2, 1.04, 1.1);
-    if (p.ready && p.duration) {
+    var t0 = Date.now();
+    function dressUp() {
+      // Finish the uniform by the end of the close-up at the latest (a clip that arrives late plays faster).
+      var left = Math.max(0.8, dress - 0.3 - (Date.now() - t0) / 1000);
       var remaining = Math.max(0.4, p.duration - p.video.currentTime);
-      p.video.playbackRate = Math.max(0.35, Math.min(2, remaining / (dress - 0.3)));
+      p.video.playbackRate = Math.max(0.35, Math.min(3, remaining / left));
       p.playing = true; p.seeking = false;
       p.video.addEventListener('ended', function () { p.video.pause(); });
       var pr = p.video.play();
       if (pr && pr.catch) pr.catch(function () {});
       kick();
+    }
+    if (p.ready && p.duration) dressUp();
+    else {                                            // tapped before its clip was in (phones): start it on arrival
+      ensureLoaded(site);
+      var waitClip = setInterval(function () {
+        if (p.ready && p.duration) { clearInterval(waitClip); dressUp(); }
+        else if (Date.now() - t0 > (dress + closeup - 1) * 1000) clearInterval(waitClip);
+      }, 100);
     }
     // Phase 2: close-up on the drone in its new uniform.
     setTimeout(function () {
