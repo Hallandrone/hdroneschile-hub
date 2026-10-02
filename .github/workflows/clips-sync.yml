@@ -1,0 +1,19 @@
+# Temporary: copies the 7 uniform clips from the build CDN into this branch so they can be fetched with git.
+name: clips-sync
+on:
+  push:
+    branches: [clips-sync]
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and commit clips
+        run: |
+          curl -fsSL -o clips.zip "https://d2ol7oe51mr4n9.cloudfront.net/user_38qaoD9axM4huuCjrgVvRwEdngr/dbe0c0d4-c000-4bb6-9ea9-fdb81d20ceaf.zip"
+          mkdir -p clips && unzip -o -q clips.zip -d clips && rm clips.zip && ls -la clips
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add clips && git commit -q -m "Copia temporal de los clips de uniforme" && git push
