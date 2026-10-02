@@ -6,7 +6,7 @@
 <title>HDRONES Chile · Academia, asesorías, tienda y servicios de drones</title>
 <meta name="description" content="Punto de entrada a las webs de HDRONES Chile: academia de drones certificada DGAC, asesorías AOC, tienda DJI, drones agrícolas, servicios profesionales, red de pilotos y antidrones. Elige tu destino y despega.">
 <link rel="canonical" href="https://hdroneschile.cl/">
-<meta name="theme-color" content="#0E2A47">
+<meta name="theme-color" content="#000000">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="HDRONES Chile">
 <meta property="og:title" content="HDRONES Chile · ¿A dónde volamos hoy?">
@@ -15,7 +15,7 @@
 <meta property="og:image" content="https://hdroneschile.cl/media/poster.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","name":"HDRONES Chile","description":"HDRONES® es el ecosistema de drones de la Academia de Drones de Chile: formación de pilotos con credencial DGAC, asesorías AOC y RPA, tienda DJI, drones agrícolas, servicios con drones para la industria, red de pilotos y antidrones.","slogan":"¡Dejamos lo convencional atrás!","alternateName":["Academia de Drones de Chile","HDRONES"],"url":"https://hdroneschile.cl/","image":"https://hdroneschile.cl/media/poster.jpg","email":"info@academiadronchile.cl","telephone":"+56994677613","address":{"@type":"PostalAddress","addressLocality":"Padre Hurtado","addressRegion":"Región Metropolitana","addressCountry":"CL"},"contactPoint":[{"@type":"ContactPoint","name":"Cursos de drones","telephone":"+56994677613","email":"info@academiadronchile.cl","contactType":"customer service","areaServed":"CL","availableLanguage":"es","hoursAvailable":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"09:00","closes":"18:00"}},{"@type":"ContactPoint","name":"Venta Dron Chile","telephone":"+56974883322","contactType":"sales","areaServed":"CL","availableLanguage":"es"},{"@type":"ContactPoint","name":"Venta Dron Agrícola","telephone":"+56935470104","contactType":"sales","areaServed":"CL","availableLanguage":"es"}],"sameAs":["https://www.academiadronchile.cl/","https://asesoriasdedrones.cl/","https://ventadronchile.cl/","https://agricolatech.cl/","https://hdronestech.cl/","https://pilotodedrones.cl/","https://antidrones.cl/","https://www.instagram.com/academiadronchile.cl","https://www.facebook.com/academiadronchile.cl"]},{"@context":"https://schema.org","@type":"WebSite","name":"HDRONES Chile","url":"https://hdroneschile.cl/","inLanguage":"es-CL"}]</script>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E2A47'/%3E%3Ctext x='32' y='42' font-family='Arial Black,Arial,sans-serif' font-weight='900' font-size='30' text-anchor='middle' fill='%23fff'%3EH%3Ctspan fill='%23FF8B3D'%3E//%3C/tspan%3E%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111111'/%3E%3Ctext x='32' y='42' font-family='Arial Black,Arial,sans-serif' font-weight='900' font-size='30' text-anchor='middle' fill='%23fff'%3EH%3Ctspan fill='%230070D5'%3E//%3C/tspan%3E%3C/text%3E%3C/svg%3E">
 <style>
   :root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
   body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}
@@ -25,25 +25,34 @@
 <body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@500;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap">
 <style>
-  /* Layout: full-bleed video scrubbed by the cursor; glass pill nav on top; headline + destination
-     list bottom-left (the drone looks toward them); telemetry bottom-right. One committed look. */
+  /* Layout: full-bleed video scrubbed by the cursor; nav on top; destinations around the drone.
+     Type and colour follow dji.com: Open Sans (600 headings, tight tracking), black and white, DJI blue
+     #0070D5 as the single accent, white panels with near-black text, near-black #272727 for dark surfaces. */
   :root {
-    --sky: #8EC5F0;
-    --ink: #0E2A47;
-    --paper: rgba(247, 250, 252, 0.92);
-    --glass: rgba(12, 38, 66, 0.30);
-    --glass-strong: rgba(12, 38, 66, 0.62);
-    --line: rgba(255, 255, 255, 0.26);
-    --rotor: #FF8B3D;
-    --dest: #FF8B3D;            /* takes the active destination's colour */
+    --sky: #9CC8EC;
+    --accent: #0070D5;          /* DJI blue */
+    --accent-hover: #005FB8;
+    --ink: rgba(0, 0, 0, 0.85); /* headings on white */
+    --body: #3B3E40;            /* text on white */
+    --muted: rgba(0, 0, 0, 0.45);
+    --surface: #FFFFFF;
+    --surface-2: #F5F5F5;
+    --hairline: rgba(0, 0, 0, 0.08);
+    --dark: #272727;
+    --paper: #FFFFFF;
+    --glass: rgba(0, 0, 0, 0.32);
+    --glass-strong: rgba(0, 0, 0, 0.6);
+    --line: rgba(255, 255, 255, 0.28);
+    --rotor: var(--accent);
+    --dest: var(--accent);
     --text: #FFFFFF;
-    --text-soft: rgba(255, 255, 255, 0.86);
-    --shadow: rgba(8, 26, 44, 0.28);
-    --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
-    --ui: "Figtree", "Avenir Next", "Segoe UI", system-ui, sans-serif;
-    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --text-soft: rgba(255, 255, 255, 0.82);
+    --shadow: rgba(0, 0, 0, 0.32);
+    --display: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+    --ui: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+    --mono: "Open Sans", "Helvetica Neue", Arial, sans-serif;
     --gutter: clamp(20px, 5vw, 72px);
     color-scheme: light;
   }
@@ -78,18 +87,17 @@
   .stage video.active { opacity: 1; }
   .shade {
     position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(90deg, rgba(8, 26, 44, 0.40) 0%, rgba(8, 26, 44, 0.14) 34%, rgba(8, 26, 44, 0) 54%),
-                linear-gradient(0deg, rgba(8, 26, 44, 0.26) 0%, rgba(8, 26, 44, 0) 36%);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.36) 0%, rgba(0, 0, 0, 0.12) 34%, rgba(0, 0, 0, 0) 54%),
+                linear-gradient(0deg, rgba(0, 0, 0, 0.24) 0%, rgba(0, 0, 0, 0) 36%);
     transition: opacity 0.8s ease;
   }
   .tint {
     position: absolute; inset: 0; pointer-events: none;
-    background: var(--dest); mix-blend-mode: soft-light; opacity: 0;
-    transition: background-color 0.3s ease;
+    display: none;
   }
   .vignette {
     position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0;
-    background: radial-gradient(ellipse 58% 62% at 62% 48%, rgba(8, 26, 44, 0) 40%, rgba(8, 26, 44, 0.55) 100%);
+    background: radial-gradient(ellipse 58% 62% at 62% 48%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.55) 100%);
     transition: opacity 1.2s ease;
   }
 
@@ -113,9 +121,9 @@
     display: grid; gap: 10px; max-width: min(560px, calc(100% - 2 * var(--gutter)));
     transition: opacity 0.6s ease, transform 0.6s ease;
   }
-  .launch-label .kicker { font: 500 12px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-soft); }
-  .launch-label .kicker b { color: var(--dest); font-weight: 500; }
-  .launch-label .big { font: 800 clamp(34px, 5.4vw, 84px)/0.95 var(--display); letter-spacing: -0.04em; color: var(--text); text-shadow: 0 2px 30px var(--shadow); text-wrap: balance; }
+  .launch-label .kicker { font: 400 14px/1.2 var(--ui); color: var(--text-soft); }
+  .launch-label .kicker b { color: var(--text); font-weight: 600; }
+  .launch-label .big { font: 600 clamp(34px, 5.4vw, 84px)/1 var(--display); letter-spacing: -0.03em; color: var(--text); text-shadow: 0 2px 30px var(--shadow); text-wrap: balance; }
   .launch-label .bar { height: 3px; width: min(100%, 420px); border-radius: 2px; background: rgba(255, 255, 255, 0.25); overflow: hidden; }
   .launch-label .bar i { display: block; height: 100%; width: 100%; transform-origin: left; transform: scaleX(0); background: var(--dest); }
   body.launch .launch-label { opacity: 1; transform: translateY(0); }
@@ -132,30 +140,30 @@
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     padding-inline: 22px 8px;
     border-radius: 999px;
-    background: var(--glass);
-    border: 1px solid var(--line);
+    background: rgba(0, 0, 0, 0.34);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     -webkit-backdrop-filter: blur(14px) saturate(140%);
     backdrop-filter: blur(14px) saturate(140%);
-    box-shadow: 0 10px 30px rgba(8, 24, 40, 0.18);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
   }
   .logo {
-    font-family: var(--display); font-weight: 800; font-size: 17px; letter-spacing: 0.01em;
+    font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: -0.01em;
     color: var(--text); text-decoration: none; white-space: nowrap;
   }
-  .logo span { color: var(--rotor); }
-  .logo small { font: 600 11px/1 var(--mono); letter-spacing: 0.08em; color: var(--text-soft); margin-left: 8px; text-transform: uppercase; }
+  .logo span { color: rgba(255, 255, 255, 0.55); }
+  .logo small { font: 400 13px/1 var(--ui); color: var(--text-soft); margin-left: 8px; }
   .nav ul { display: flex; align-items: center; gap: 2px; list-style: none; margin: 0; padding: 0; }
   .nav a, .nav button {
-    font: 600 14px/1 var(--ui); color: var(--text-soft);
+    font: 400 14px/1 var(--ui); color: var(--text);
     text-decoration: none; background: none; border: 0; cursor: pointer;
     padding: 11px 13px; border-radius: 999px; white-space: nowrap;
   }
   .nav a:hover, .nav button:hover { color: var(--text); background: rgba(255, 255, 255, 0.12); }
   .nav a[aria-current="page"] { color: var(--text); }
-  .nav a:focus-visible, .nav button:focus-visible { outline: 2px solid var(--rotor); outline-offset: 2px; }
+  .nav a:focus-visible, .nav button:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 2px; }
   .status {
     display: inline-flex; align-items: center; gap: 8px;
-    font: 600 14px/1 var(--ui); color: var(--text-soft);
+    font: 400 14px/1 var(--ui); color: var(--text-soft);
     padding: 11px 13px; white-space: nowrap;
   }
   .status b { color: var(--text); font-weight: 600; min-width: 5.2em; }
@@ -171,32 +179,30 @@
     right: max(16px, calc(50% - 440px));
     width: min(340px, calc(100% - 32px)); box-sizing: border-box;
     padding: 18px 20px;
-    border-radius: 18px;
-    background: var(--glass-strong);
-    border: 1px solid var(--line);
-    -webkit-backdrop-filter: blur(16px) saturate(140%);
-    backdrop-filter: blur(16px) saturate(140%);
-    box-shadow: 0 18px 40px rgba(8, 24, 40, 0.28);
-    font: 500 14px/1.55 var(--ui); color: var(--text);
+    border-radius: 16px;
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+    font: 400 14px/1.55 var(--ui); color: var(--body);
   }
-  .about h2, .contact h2 { margin: 0 0 6px; font: 800 18px/1.2 var(--display); letter-spacing: -0.01em; }
-  .about p { margin: 0 0 8px; color: var(--text-soft); }
+  .about h2, .contact h2 { margin: 0 0 6px; font: 600 20px/1.2 var(--display); letter-spacing: -0.03em; color: var(--ink); }
+  .about p { margin: 0 0 8px; color: var(--body); }
   .about p:last-child { margin: 0; }
-  .about code { font: 500 12.5px/1 var(--mono); color: var(--text); background: rgba(255, 255, 255, 0.12); padding: 2px 6px; border-radius: 6px; }
+  .about code { font: 600 12.5px/1 var(--ui); color: var(--ink); background: var(--surface-2); padding: 3px 7px; border-radius: 6px; }
 
   /* Contact panel: same data as academiadronchile.cl */
   .contact { width: min(380px, calc(100% - 32px)); }
-  .contact .sub { margin: 0 0 12px; color: var(--text-soft); }
+  .contact .sub { margin: 0 0 12px; color: var(--muted); }
   .contact ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
   .contact li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; }
   .contact li svg { width: 18px; height: 18px; margin-top: 2px; color: var(--rotor); }
-  .contact li span { display: block; font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft); font-family: var(--mono); }
-  .contact a { color: var(--text); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.28); }
-  .contact a:hover { border-bottom-color: var(--rotor); }
-  .contact .hours { margin: 12px 0 0; padding-top: 10px; border-top: 1px solid var(--line); color: var(--text-soft); font-size: 13px; }
+  .contact li span { display: block; font-size: 12px; color: var(--muted); }
+  .contact a { color: var(--ink); font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--hairline); }
+  .contact a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  .contact .hours { margin: 12px 0 0; padding-top: 10px; border-top: 1px solid var(--hairline); color: var(--muted); font-size: 13px; }
   .contact .social { display: flex; gap: 8px; margin-top: 10px; }
-  .contact .social a { font: 600 12px/1 var(--ui); padding: 8px 11px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.08); }
-  .contact .social a:hover { background: rgba(255, 255, 255, 0.16); }
+  .contact .social a { font: 400 13px/1 var(--ui); padding: 8px 14px; border-radius: 999px; border: 0; background: rgba(0, 0, 0, 0.85); color: #FFFFFF; }
+  .contact .social a:hover { background: var(--accent); color: #FFFFFF; }
 
 
   /* Headline and destinations */
@@ -211,14 +217,14 @@
   .hint { display: none; }
   .eyebrow {
     margin: 0;
-    font: 500 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+    font: 400 14px/1.3 var(--ui);
     color: var(--text-soft); text-shadow: 0 1px 10px var(--shadow);
   }
-  .eyebrow b { color: var(--text); font-weight: 500; }
+  .eyebrow b { color: var(--text); font-weight: 600; }
   h1 {
     margin: 0;
-    font-family: var(--display); font-weight: 800;
-    font-size: clamp(34px, 4.2vw, 64px); line-height: 0.92; letter-spacing: -0.045em;
+    font-family: var(--display); font-weight: 600;
+    font-size: clamp(34px, 4.2vw, 64px); line-height: 1.02; letter-spacing: -0.03em;
     color: var(--text);
     text-shadow: 0 2px 28px var(--shadow);
     text-wrap: balance;
@@ -234,18 +240,18 @@
     border: 1px solid var(--line);
     -webkit-backdrop-filter: blur(12px) saturate(140%);
     backdrop-filter: blur(12px) saturate(140%);
-    box-shadow: 0 10px 28px rgba(8, 26, 44, 0.16);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
     cursor: pointer;
     transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
   }
   .dest:hover, .dest:focus-visible {
     background: var(--paper); color: var(--ink);
-    border-color: rgba(255, 255, 255, 0.85);
+    border-color: #FFFFFF;
     transform: translateY(-1px);
-    box-shadow: 0 14px 34px rgba(8, 26, 44, 0.28);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
   }
   .dest.near { border-color: var(--dest); }
-  .dest:focus-visible { outline: 3px solid var(--rotor); outline-offset: 3px; }
+  .dest:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
   .dest .ico {
     width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center;
     background: rgba(255, 255, 255, 0.12); color: var(--text);
@@ -256,20 +262,20 @@
   .dest .txt { display: grid; gap: 2px; min-width: 0; }
   .dest .name { font: 600 13.5px/1.15 var(--ui); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dest .meta {
-    font: 500 11px/1.2 var(--mono); letter-spacing: 0.01em;
+    font: 400 12px/1.2 var(--ui);
     color: var(--text-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .dest:hover .meta, .dest:focus-visible .meta { color: rgba(14, 42, 71, 0.72); }
+  .dest:hover .meta, .dest:focus-visible .meta { color: var(--muted); }
   .dest .meta em { font-style: normal; opacity: 0.75; }
   .dest .tag {
-    font: 600 10.5px/1 var(--ui); letter-spacing: 0.04em; text-transform: uppercase;
+    font: 600 12px/1 var(--ui);
     display: inline-flex; align-items: center; gap: 5px;
     padding: 6px 8px; border-radius: 999px;
     color: var(--text-soft); background: rgba(255, 255, 255, 0.10);
     white-space: nowrap;
   }
-  .dest .tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--c, var(--rotor)); }
-  .dest:hover .tag, .dest:focus-visible .tag { color: var(--ink); background: rgba(14, 42, 71, 0.08); }
+  .dest .tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #FFFFFF; }
+  .dest:hover .tag, .dest:focus-visible .tag { color: var(--ink); background: var(--surface-2); }
   @media (max-width: 1500px) { .dest .tag { display: none; } .dest { grid-template-columns: 36px 1fr; } }
 
   /* Orbit layout (wide screens): the destinations sit around the drone, far from each other, so each one
@@ -281,7 +287,7 @@
   .route {
     fill: none; stroke: #FFFFFF; stroke-width: 3.4; stroke-linecap: round;
     stroke-dasharray: 0.1 9; opacity: 0;
-    filter: drop-shadow(0 0 3px var(--dest)) drop-shadow(0 0 1px rgba(8, 26, 44, 0.55));
+    filter: drop-shadow(0 0 3px var(--accent)) drop-shadow(0 0 1px rgba(0, 0, 0, 0.5));
     animation: route-flow 0.7s linear infinite;
   }
   @keyframes route-flow { to { stroke-dashoffset: -9.1; } }
@@ -292,10 +298,10 @@
     position: absolute; left: var(--gutter); top: calc(env(safe-area-inset-top, 0px) + 100px);
     max-width: min(400px, 30vw); gap: 14px; pointer-events: auto;
   }
-  .orbit .eyebrow { display: block; letter-spacing: 0.06em; }
+  .orbit .eyebrow { display: block; }
   @media (max-height: 800px), (max-width: 1240px) { .orbit .eyebrow { display: none; } .orbit .hint { font-size: 14px; } }
   .orbit h1 { font-size: clamp(32px, 3.3vw, 60px); }
-  .orbit .hint { display: block; margin: 0; max-width: 30ch; font: 500 15px/1.45 var(--ui); color: var(--text-soft); text-shadow: 0 1px 12px var(--shadow); }
+  .orbit .hint { display: block; margin: 0; max-width: 30ch; font: 400 15px/1.5 var(--ui); color: var(--text-soft); text-shadow: 0 1px 12px var(--shadow); }
   .hint .for-touch { display: none; }
   @media (hover: none) { .hint .for-mouse { display: none; } .hint .for-touch { display: inline; } }
   .orbit .dests { display: block; position: absolute; inset: 0; width: auto; pointer-events: none; }
@@ -312,45 +318,53 @@
   .orbit .dest.flip { flex-direction: row-reverse; padding: 5px 5px 5px 16px; text-align: right; }
   .orbit .dest:hover, .orbit .dest:focus-visible { transform: translate3d(var(--x, -9999px), var(--y, 0px), 0) scale(calc(var(--s, 1) + 0.03)); }
   .orbit .dest .ico { position: relative; width: 40px; height: 40px; border-radius: 50%; flex: none; }
-  .orbit .dest:not(:hover):not(:focus-visible) .ico { background: color-mix(in srgb, var(--c) calc(var(--p, 0) * 100%), rgba(255, 255, 255, 0.12)); }
+  .orbit .dest:not(:hover):not(:focus-visible) .ico { background: color-mix(in srgb, var(--accent) calc(var(--p, 0) * 100%), rgba(255, 255, 255, 0.14)); }
   .orbit .dest .ico::before {   /* how dressed the drone is for this destination */
     content: ""; position: absolute; inset: -4px; border-radius: 50%; pointer-events: none;
-    background: conic-gradient(var(--c) calc(var(--p, 0) * 360deg), rgba(255, 255, 255, 0.24) 0deg);
+    background: conic-gradient(var(--accent) calc(var(--p, 0) * 360deg), rgba(255, 255, 255, 0.26) 0deg);
     -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
             mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
   }
-  .orbit .dest .name { font-size: 14px; }
+  .orbit .dest .name { font-size: 14px; font-weight: 600; }
   .orbit .dest .meta { display: block; }
   .orbit .dest .meta em { display: none; }
   .orbit .dest .tag {   /* the uniform being put on, on the side of the chip away from the drone */
     display: inline-flex; position: absolute; left: var(--ax, 25px); top: calc(100% + 8px);
     transform: translateX(-50%); pointer-events: none; white-space: nowrap;
-    color: #fff; background: rgba(8, 26, 44, 0.58);
-    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    color: #FFFFFF; background: var(--accent);
     opacity: calc(var(--p, 0) * 1.6 - 0.15);
   }
   .orbit .dest.tag-above .tag { top: auto; bottom: calc(100% + 8px); }
   .orbit .dest.tag-side .tag { top: 50%; left: calc(100% + 8px); transform: translateY(-50%); }
   .orbit .dest.tag-side.flip .tag { left: auto; right: calc(100% + 8px); }
   .orbit .dest:not(.near):not(:hover):not(:focus-visible) { opacity: calc(1 - var(--focus, 0) * 0.4); }
-  .orbit .dest:hover .tag, .orbit .dest:focus-visible .tag { color: #fff; background: rgba(8, 26, 44, 0.58); }
-  .orbit .dest:hover .ico, .orbit .dest:focus-visible .ico { background: var(--c); color: #fff; }
+  .orbit .dest:hover .tag, .orbit .dest:focus-visible .tag { color: #FFFFFF; background: var(--accent); }
+  .orbit .dest:hover .ico, .orbit .dest:focus-visible .ico { background: var(--accent); color: #FFFFFF; }
 
   /* Sheet layout (portrait and near-square screens: phones, narrow panels): the drone stays whole and visible
      in the upper part of the screen; the destinations sit in a frosted sheet below it. The script sizes both. */
   .sheet body { background-position: 50% 100%; }
   .sheet .stage { bottom: var(--sheet-h, 46vh); transform-origin: 50% 56%; }
   .sheet .stage video { object-position: var(--obj, 50% 50%); }
-  .sheet .shade { background: linear-gradient(0deg, rgba(8, 26, 44, 0.30) 0%, rgba(8, 26, 44, 0) 28%); }
+  .sheet .shade { background: linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0%, rgba(0, 0, 0, 0) 28%); }
   .sheet .copy {
     left: 0; right: 0; bottom: 0; width: auto; box-sizing: border-box;
     padding: 18px 16px calc(env(safe-area-inset-bottom, 0px) + 58px);
     gap: 12px;
-    background: linear-gradient(180deg, rgba(12, 38, 66, 0.72), rgba(8, 26, 44, 0.9));
-    -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%);
-    border-radius: 22px 22px 0 0; border-top: 1px solid var(--line);
-    box-shadow: 0 -14px 40px rgba(8, 26, 44, 0.25);
+    background: var(--surface);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -14px 40px rgba(0, 0, 0, 0.18);
   }
+  .sheet h1 { color: var(--ink); text-shadow: none; }
+  .sheet .dest { background: var(--surface-2); border-color: transparent; color: var(--ink); box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .sheet .dest .ico { background: var(--dark); color: #FFFFFF; }
+  .sheet .dest:hover, .sheet .dest:focus-visible { background: #FFFFFF; border-color: var(--accent); }
+  .sheet .dest.near { border-color: var(--accent); }
+  .sheet .dest:hover .ico, .sheet .dest:focus-visible .ico { background: var(--accent); }
+  .sheet .hud { background: var(--surface-2); border-color: transparent; color: var(--ink); text-shadow: none; }
+  .sheet .hud .dim { color: var(--muted); }
+  .sheet .uniform b { color: var(--ink); }
+  .sheet .meter { background: rgba(0, 0, 0, 0.12); }
   .sheet .headline { gap: 6px; }
   .sheet .eyebrow { display: none; }
   .sheet h1 { font-size: clamp(24px, 6.2vw, 34px); line-height: 1; }
@@ -375,95 +389,96 @@
     display: grid; gap: 10px; justify-items: end;
     padding: 12px 14px;
     border-radius: 14px;
-    background: rgba(8, 26, 44, 0.22);
+    background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.14);
     -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-    font: 500 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase;
+    font: 400 12px/1 var(--ui); letter-spacing: 0.02em; text-transform: uppercase;
     color: rgba(255, 255, 255, 0.94);
-    text-shadow: 0 1px 8px rgba(8, 26, 44, 0.4);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
     font-variant-numeric: tabular-nums;
   }
   .hud .row { display: flex; gap: 18px; text-transform: none; letter-spacing: 0.02em; }
   .hud .row a { color: var(--text); text-decoration: none; }
-  .hud .row a:hover { color: var(--rotor); }
-  .hud .tele { text-transform: uppercase; letter-spacing: 0.08em; }
+  .hud .row a:hover { color: #FFFFFF; text-decoration: underline; }
+  .hud .tele { text-transform: uppercase; letter-spacing: 0.02em; }
   .hud .dim { color: rgba(255, 255, 255, 0.7); }
   .uniform { display: flex; align-items: center; gap: 12px; }
-  .uniform b { font-weight: 500; color: var(--text); }
+  .uniform b { font-weight: 600; color: var(--text); }
   .meter { width: 180px; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.28); overflow: hidden; }
   .meter i {
     display: block; width: 100%; height: 100%;
     transform-origin: left center; transform: scaleX(0);
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), var(--dest));
+    background: var(--accent);
   }
 
   .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 
   /* Quiénes somos: HDRONES as an ecosystem. The seven areas sit around the brand (as the destinations orbit the
      drone); each one in the list sends the drone off to that site. */
-  .who-backdrop { position: fixed; inset: 0; z-index: 6; background: rgba(6, 20, 36, 0.45); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+  .who-backdrop { position: fixed; inset: 0; z-index: 6; background: rgba(0, 0, 0, 0.5); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
   .who {
     position: fixed; z-index: 7;
-    top: calc(env(safe-area-inset-top, 0px) + 76px); left: 50%; transform: translateX(-50%);
-    width: min(940px, calc(100% - 32px)); box-sizing: border-box;
-    max-height: calc(100vh - 96px); max-height: calc(100dvh - 96px - env(safe-area-inset-top, 0px));
+    top: calc(env(safe-area-inset-top, 0px) + 72px); left: 50%; transform: translateX(-50%);
+    width: min(960px, calc(100% - 32px)); box-sizing: border-box;
+    max-height: calc(100vh - 84px); max-height: calc(100dvh - 84px - env(safe-area-inset-top, 0px));
     overflow: auto; overscroll-behavior: contain;
-    padding: 20px 24px 16px; border-radius: 22px;
-    background: rgba(9, 28, 49, 0.9); border: 1px solid var(--line);
-    -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%);
-    box-shadow: 0 28px 70px rgba(4, 16, 30, 0.45);
-    color: var(--text); font: 500 14px/1.55 var(--ui);
+    padding: 20px 26px 16px; border-radius: 16px;
+    background: var(--surface); border: 0;
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.35);
+    color: var(--body); font: 400 14px/1.55 var(--ui);
   }
   .who-close {
     position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%;
-    border: 1px solid var(--line); background: rgba(255, 255, 255, 0.08); color: var(--text);
+    border: 0; background: var(--surface-2); color: var(--ink);
     cursor: pointer; display: grid; place-items: center; padding: 0;
   }
   .who-close svg { width: 18px; height: 18px; }
-  .who-close:hover { background: rgba(255, 255, 255, 0.16); }
-  .who-close:focus-visible { outline: 2px solid var(--rotor); outline-offset: 2px; }
-  .who-kicker { margin: 0 0 6px; font: 500 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--rotor); }
-  .who h2 { margin: 0 48px 10px 0; font: 800 clamp(24px, 3vw, 34px)/1.05 var(--display); letter-spacing: -0.03em; text-wrap: balance; }
-  .who h2 span { font-size: 0.5em; vertical-align: super; color: var(--text-soft); }
-  .who-lead { margin: 0 0 14px; max-width: 76ch; color: var(--text-soft); font-size: 14.5px; line-height: 1.5; }
+  .who-close:hover { background: #E8E8E8; }
+  .who-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .who-kicker { margin: 0 0 6px; font: 600 14px/1.2 var(--ui); color: var(--accent); }
+  .who h2 { margin: 0 48px 10px 0; font: 600 clamp(24px, 3vw, 34px)/1.15 var(--display); letter-spacing: -0.03em; color: var(--ink); text-wrap: balance; }
+  .who h2 span { font-size: 0.5em; vertical-align: super; color: var(--muted); }
+  .who-lead { margin: 0 0 14px; max-width: 78ch; color: var(--body); font-size: 15px; line-height: 1.55; }
   .who-stats { list-style: none; margin: 0 0 12px; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
-  .who-stats li { padding: 8px 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); }
-  .who-stats b { display: block; font: 800 18px/1.1 var(--display); letter-spacing: -0.01em; }
-  .who-stats span { display: block; margin-top: 3px; font-size: 12px; line-height: 1.35; color: var(--text-soft); }
+  .who-stats li { padding: 9px 14px; border-radius: 12px; background: var(--surface-2); }
+  .who-stats b { display: block; font: 600 20px/1.15 var(--display); letter-spacing: -0.03em; color: var(--ink); }
+  .who-stats span { display: block; margin-top: 3px; font-size: 12px; line-height: 1.4; color: var(--muted); }
   .eco { display: grid; grid-template-columns: 250px 1fr; gap: 22px; align-items: center; }
   .eco-map { width: 100%; height: auto; display: block; }
-  .eco-ring { fill: none; stroke: rgba(255, 255, 255, 0.45); stroke-width: 2.2; stroke-dasharray: 0.1 9; stroke-linecap: round; }
-  .eco-spokes line { stroke: rgba(255, 255, 255, 0.22); stroke-width: 1.2; stroke-dasharray: 3 4; }
-  .eco-core { fill: rgba(255, 255, 255, 0.07); stroke: rgba(255, 255, 255, 0.3); stroke-width: 1.2; }
-  .eco-name { font: 800 19px var(--display); fill: #FFFFFF; letter-spacing: 0.01em; }
-  .eco-sl { fill: var(--rotor); }
-  .eco-sub { font: 500 8.5px var(--mono); fill: rgba(255, 255, 255, 0.7); letter-spacing: 0.14em; }
+  .eco-ring { fill: none; stroke: rgba(0, 0, 0, 0.3); stroke-width: 2.2; stroke-dasharray: 0.1 9; stroke-linecap: round; }
+  .eco-spokes line { stroke: rgba(0, 0, 0, 0.14); stroke-width: 1.2; stroke-dasharray: 3 4; }
+  .eco-core { fill: var(--accent); stroke: none; }
+  .eco-name { font: 700 18px var(--display); fill: #FFFFFF; letter-spacing: -0.01em; }
+  .eco-sl { fill: rgba(255, 255, 255, 0.6); }
+  .eco-sub { font: 600 8.5px var(--ui); fill: rgba(255, 255, 255, 0.8); letter-spacing: 0.12em; }
   .eco-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 10px; }
   .eco-item {
     display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start;
-    padding: 6px 10px 6px 6px; border-radius: 12px; color: var(--text); text-decoration: none;
+    padding: 6px 10px 6px 6px; border-radius: 12px; color: var(--body); text-decoration: none;
     border: 1px solid transparent; transition: background-color 0.15s ease, border-color 0.15s ease;
   }
-  .eco-item:hover, .eco-item:focus-visible { background: rgba(255, 255, 255, 0.07); border-color: var(--c); }
-  .eco-item:focus-visible { outline: 2px solid var(--rotor); outline-offset: 2px; }
-  .eco-ico { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #FFFFFF; }
+  .eco-item:hover, .eco-item:focus-visible { background: var(--surface-2); border-color: transparent; }
+  .eco-item:hover .eco-ico, .eco-item:focus-visible .eco-ico { background: var(--accent); }
+  .eco-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .eco-ico { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--dark); color: #FFFFFF; transition: background-color 0.15s ease; }
   .eco-ico svg { width: 19px; height: 19px; display: block; }
   .eco-txt { display: grid; gap: 1px; min-width: 0; }
-  .eco-verb { font: 500 11px/1.2 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--c); }
-  .eco-area { font: 700 14.5px/1.25 var(--ui); }
-  .eco-desc { font-size: 12px; line-height: 1.38; color: var(--text-soft); }
-  .who-foot { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
-  .who-quote { margin: 0; max-width: 58ch; font: 600 15px/1.45 var(--ui); color: var(--text); }
+  .eco-verb { font: 600 12px/1.2 var(--ui); color: var(--accent); }
+  .eco-area { font: 600 15px/1.3 var(--ui); letter-spacing: -0.01em; color: var(--ink); }
+  .eco-desc { font-size: 12.5px; line-height: 1.4; color: var(--body); }
+  .who-foot { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--hairline); }
+  .who-quote { margin: 0; max-width: 58ch; font: 600 16px/1.45 var(--ui); letter-spacing: -0.01em; color: var(--ink); }
   .who-cta { display: flex; gap: 8px; flex: none; }
   .who-btn {
-    font: 700 13.5px/1 var(--ui); padding: 12px 16px; border-radius: 999px;
-    background: var(--rotor); color: #FFFFFF; text-decoration: none; border: 1px solid transparent;
+    font: 400 14px/1 var(--ui); padding: 12px 20px; border-radius: 999px;
+    background: var(--accent); color: #FFFFFF; text-decoration: none; border: 0;
     cursor: pointer; white-space: nowrap;
   }
-  .who-btn.ghost { background: rgba(255, 255, 255, 0.08); border-color: var(--line); }
-  .who-btn:hover { filter: brightness(1.08); }
-  .who-btn:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 2px; }
-  .who-base { margin: 8px 0 0; font-size: 12px; color: var(--text-soft); }
+  .who-btn.ghost { background: rgba(0, 0, 0, 0.85); }
+  .who-btn:hover { background: var(--accent-hover); }
+  .who-btn.ghost:hover { background: #000000; }
+  .who-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .who-base { margin: 10px 0 0; font-size: 12px; color: var(--muted); }
   body.launch .who, body.launch .who-backdrop { display: none; }
   #who-btn .short { display: none; }
   @media (max-width: 860px) {
@@ -489,19 +504,19 @@
     width: 36px; height: 36px; margin: -18px 0 0 -18px;
     border-radius: 50%;
     border: 2px solid rgba(255, 255, 255, 0.85);
-    background: rgba(14, 42, 71, 0.22);
+    background: rgba(0, 0, 0, 0.18);
     pointer-events: none; opacity: 0;
     transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease, margin 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
     will-change: transform;
   }
   .ring.on { opacity: 1; }
-  .ring.hot { width: 56px; height: 56px; margin: -28px 0 0 -28px; border-color: var(--dest); background: rgba(255, 255, 255, 0.14); }
+  .ring.hot { width: 56px; height: 56px; margin: -28px 0 0 -28px; border-color: var(--accent); background: rgba(255, 255, 255, 0.14); }
   @media (hover: none), (pointer: coarse) { .ring { display: none; } }
 
   /* Portrait screens: keep the drone centred */
   @media (max-aspect-ratio: 1/1) {
     .stage video { object-position: calc(50vw - 113.78vh) 50%; }
-    .shade { background: linear-gradient(0deg, rgba(8, 26, 44, 0.58) 0%, rgba(8, 26, 44, 0.22) 42%, rgba(8, 26, 44, 0) 62%); }
+    .shade { background: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.2) 42%, rgba(0, 0, 0, 0) 62%); }
   }
 
   @media (max-height: 760px) {
@@ -536,7 +551,7 @@
   #about-btn .short { display: none; }
   @media (max-width: 560px) {
     .status .lbl { display: none; }
-    .eyebrow { font-size: 11px; letter-spacing: 0.06em; }
+    .eyebrow { font-size: 13px; }
     #about-btn .long { display: none; }
     #about-btn .short { display: inline; }
     .nav a, .nav button, .status { padding: 10px 7px; }
@@ -609,7 +624,7 @@
     <li><b>Dubái</b><span>certificación internacional para operar</span></li>
   </ul>
   <div class="eco">
-    <svg class="eco-map" viewBox="0 0 300 300" aria-hidden="true" focusable="false"><circle class="eco-ring" cx="150" cy="150" r="112"/><g class="eco-spokes"><line x1="150.0" y1="96.0" x2="150.0" y2="67.0"/><line x1="192.2" y1="116.3" x2="214.9" y2="98.3"/><line x1="202.6" y1="162.0" x2="230.9" y2="168.5"/><line x1="173.4" y1="198.7" x2="186.0" y2="224.8"/><line x1="126.6" y1="198.7" x2="114.0" y2="224.8"/><line x1="97.4" y1="162.0" x2="69.1" y2="168.5"/><line x1="107.8" y1="116.3" x2="85.1" y2="98.3"/></g><circle class="eco-core" cx="150" cy="150" r="52"/><text x="150" y="150" text-anchor="middle" class="eco-name">HDRONES<tspan class="eco-sl">//</tspan></text><text x="150" y="169" text-anchor="middle" class="eco-sub">ECOSISTEMA</text><circle cx="150.0" cy="38.0" r="25" fill="#4DA3FF"/><svg x="137.0" y="25.0" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-academia"/></svg><circle cx="237.6" cy="80.2" r="25" fill="#9B7BFF"/><svg x="224.6" y="67.2" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-asesorias"/></svg><circle cx="259.2" cy="174.9" r="25" fill="#FF8B3D"/><svg x="246.2" y="161.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-tienda"/></svg><circle cx="198.6" cy="250.9" r="25" fill="#6CCB5F"/><svg x="185.6" y="237.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-agro"/></svg><circle cx="101.4" cy="250.9" r="25" fill="#FFC24A"/><svg x="88.4" y="237.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-servicios"/></svg><circle cx="40.8" cy="174.9" r="25" fill="#E05A8C"/><svg x="27.8" y="161.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pilotos"/></svg><circle cx="62.4" cy="80.2" r="25" fill="#5FD3D3"/><svg x="49.4" y="67.2" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-antidrones"/></svg></svg>
+    <svg class="eco-map" viewBox="0 0 300 300" aria-hidden="true" focusable="false"><circle class="eco-ring" cx="150" cy="150" r="112"/><g class="eco-spokes"><line x1="150.0" y1="96.0" x2="150.0" y2="67.0"/><line x1="192.2" y1="116.3" x2="214.9" y2="98.3"/><line x1="202.6" y1="162.0" x2="230.9" y2="168.5"/><line x1="173.4" y1="198.7" x2="186.0" y2="224.8"/><line x1="126.6" y1="198.7" x2="114.0" y2="224.8"/><line x1="97.4" y1="162.0" x2="69.1" y2="168.5"/><line x1="107.8" y1="116.3" x2="85.1" y2="98.3"/></g><circle class="eco-core" cx="150" cy="150" r="52"/><text x="150" y="150" text-anchor="middle" class="eco-name">HDRONES<tspan class="eco-sl">//</tspan></text><text x="150" y="169" text-anchor="middle" class="eco-sub">ECOSISTEMA</text><circle cx="150.0" cy="38.0" r="25" fill="#272727"/><svg x="137.0" y="25.0" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-academia"/></svg><circle cx="237.6" cy="80.2" r="25" fill="#272727"/><svg x="224.6" y="67.2" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-asesorias"/></svg><circle cx="259.2" cy="174.9" r="25" fill="#272727"/><svg x="246.2" y="161.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-tienda"/></svg><circle cx="198.6" cy="250.9" r="25" fill="#272727"/><svg x="185.6" y="237.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-agro"/></svg><circle cx="101.4" cy="250.9" r="25" fill="#272727"/><svg x="88.4" y="237.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-servicios"/></svg><circle cx="40.8" cy="174.9" r="25" fill="#272727"/><svg x="27.8" y="161.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pilotos"/></svg><circle cx="62.4" cy="80.2" r="25" fill="#272727"/><svg x="49.4" y="67.2" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-antidrones"/></svg></svg>
     <ol class="eco-list">
       <li style="--c:#4DA3FF"><a class="eco-item" href="https://www.academiadronchile.cl/" data-go="academia"><span class="eco-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-academia"/></svg></span><span class="eco-txt"><span class="eco-verb">Formamos</span><span class="eco-area">Academia de Drones</span><span class="eco-desc">Cursos de piloto con credencial DGAC y especializaciones en fotogrametría, inspección, topografía, minería y seguridad.</span></span></a></li>
       <li style="--c:#9B7BFF"><a class="eco-item" href="https://asesoriasdedrones.cl/" data-go="asesorias"><span class="eco-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-asesorias"/></svg></span><span class="eco-txt"><span class="eco-verb">Certificamos</span><span class="eco-area">Asesorías AOC y RPA</span><span class="eco-desc">Acompañamos a las empresas en la certificación AOC y el registro de sus RPA ante la DGAC.</span></span></a></li>
@@ -1161,7 +1176,6 @@
     if (!active) return;
     var p = playerOf(active);
     p.video.classList.add('active');
-    rootStyle.setProperty('--dest', active.color);
     destNav.textContent = active.shortName;
     destHud.textContent = active.uniform || active.shortName;
     clipEl.textContent = active.clipKey === 'base' ? 'base' : active.clipKey;
