@@ -1185,6 +1185,9 @@
     if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', relayout);
   }
   window.addEventListener('load', relayout);
+  // Wide screens: fetch the clips right after load (one at a time), so the first destination someone
+  // approaches is already able to dress the drone.
+  window.addEventListener('load', function () { if (orbit) setTimeout(startPrefetch, 600); });
   if (deep) { deep.el.focus(); setActive(deep, 0.85); }
   render();
 })();
