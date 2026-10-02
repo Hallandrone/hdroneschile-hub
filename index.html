@@ -14,7 +14,7 @@
 <meta property="og:url" content="https://hdroneschile.cl/">
 <meta property="og:image" content="https://hdroneschile.cl/media/poster.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","name":"HDRONES Chile","alternateName":["Academia de Drones de Chile","HDRONES"],"url":"https://hdroneschile.cl/","image":"https://hdroneschile.cl/media/poster.jpg","email":"info@academiadronchile.cl","telephone":"+56994677613","address":{"@type":"PostalAddress","addressLocality":"Padre Hurtado","addressRegion":"Región Metropolitana","addressCountry":"CL"},"contactPoint":[{"@type":"ContactPoint","name":"Cursos de drones","telephone":"+56994677613","email":"info@academiadronchile.cl","contactType":"customer service","areaServed":"CL","availableLanguage":"es","hoursAvailable":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"09:00","closes":"18:00"}},{"@type":"ContactPoint","name":"Venta Dron Chile","telephone":"+56974883322","contactType":"sales","areaServed":"CL","availableLanguage":"es"},{"@type":"ContactPoint","name":"Venta Dron Agrícola","telephone":"+56935470104","contactType":"sales","areaServed":"CL","availableLanguage":"es"}],"sameAs":["https://www.academiadronchile.cl/","https://asesoriasdedrones.cl/","https://ventadronchile.cl/","https://agricolatech.cl/","https://hdronestech.cl/","https://pilotodedrones.cl/","https://antidrones.cl/","https://www.instagram.com/academiadronchile.cl","https://www.facebook.com/academiadronchile.cl"]},{"@context":"https://schema.org","@type":"WebSite","name":"HDRONES Chile","url":"https://hdroneschile.cl/","inLanguage":"es-CL"}]</script>
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","name":"HDRONES Chile","description":"HDRONES® es el ecosistema de drones de la Academia de Drones de Chile: formación de pilotos con credencial DGAC, asesorías AOC y RPA, tienda DJI, drones agrícolas, servicios con drones para la industria, red de pilotos y antidrones.","slogan":"¡Dejamos lo convencional atrás!","alternateName":["Academia de Drones de Chile","HDRONES"],"url":"https://hdroneschile.cl/","image":"https://hdroneschile.cl/media/poster.jpg","email":"info@academiadronchile.cl","telephone":"+56994677613","address":{"@type":"PostalAddress","addressLocality":"Padre Hurtado","addressRegion":"Región Metropolitana","addressCountry":"CL"},"contactPoint":[{"@type":"ContactPoint","name":"Cursos de drones","telephone":"+56994677613","email":"info@academiadronchile.cl","contactType":"customer service","areaServed":"CL","availableLanguage":"es","hoursAvailable":{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"09:00","closes":"18:00"}},{"@type":"ContactPoint","name":"Venta Dron Chile","telephone":"+56974883322","contactType":"sales","areaServed":"CL","availableLanguage":"es"},{"@type":"ContactPoint","name":"Venta Dron Agrícola","telephone":"+56935470104","contactType":"sales","areaServed":"CL","availableLanguage":"es"}],"sameAs":["https://www.academiadronchile.cl/","https://asesoriasdedrones.cl/","https://ventadronchile.cl/","https://agricolatech.cl/","https://hdronestech.cl/","https://pilotodedrones.cl/","https://antidrones.cl/","https://www.instagram.com/academiadronchile.cl","https://www.facebook.com/academiadronchile.cl"]},{"@context":"https://schema.org","@type":"WebSite","name":"HDRONES Chile","url":"https://hdroneschile.cl/","inLanguage":"es-CL"}]</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230E2A47'/%3E%3Ctext x='32' y='42' font-family='Arial Black,Arial,sans-serif' font-weight='900' font-size='30' text-anchor='middle' fill='%23fff'%3EH%3Ctspan fill='%23FF8B3D'%3E//%3C/tspan%3E%3C/text%3E%3C/svg%3E">
 <style>
   :root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -397,6 +397,92 @@
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.6), var(--dest));
   }
 
+  .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+  /* Quiénes somos: HDRONES as an ecosystem. The seven areas sit around the brand (as the destinations orbit the
+     drone); each one in the list sends the drone off to that site. */
+  .who-backdrop { position: fixed; inset: 0; z-index: 6; background: rgba(6, 20, 36, 0.45); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+  .who {
+    position: fixed; z-index: 7;
+    top: calc(env(safe-area-inset-top, 0px) + 76px); left: 50%; transform: translateX(-50%);
+    width: min(940px, calc(100% - 32px)); box-sizing: border-box;
+    max-height: calc(100vh - 96px); max-height: calc(100dvh - 96px - env(safe-area-inset-top, 0px));
+    overflow: auto; overscroll-behavior: contain;
+    padding: 20px 24px 16px; border-radius: 22px;
+    background: rgba(9, 28, 49, 0.9); border: 1px solid var(--line);
+    -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%);
+    box-shadow: 0 28px 70px rgba(4, 16, 30, 0.45);
+    color: var(--text); font: 500 14px/1.55 var(--ui);
+  }
+  .who-close {
+    position: absolute; top: 14px; right: 14px; width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--line); background: rgba(255, 255, 255, 0.08); color: var(--text);
+    cursor: pointer; display: grid; place-items: center; padding: 0;
+  }
+  .who-close svg { width: 18px; height: 18px; }
+  .who-close:hover { background: rgba(255, 255, 255, 0.16); }
+  .who-close:focus-visible { outline: 2px solid var(--rotor); outline-offset: 2px; }
+  .who-kicker { margin: 0 0 6px; font: 500 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--rotor); }
+  .who h2 { margin: 0 48px 10px 0; font: 800 clamp(24px, 3vw, 34px)/1.05 var(--display); letter-spacing: -0.03em; text-wrap: balance; }
+  .who h2 span { font-size: 0.5em; vertical-align: super; color: var(--text-soft); }
+  .who-lead { margin: 0 0 14px; max-width: 76ch; color: var(--text-soft); font-size: 14.5px; line-height: 1.5; }
+  .who-stats { list-style: none; margin: 0 0 12px; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+  .who-stats li { padding: 8px 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); }
+  .who-stats b { display: block; font: 800 18px/1.1 var(--display); letter-spacing: -0.01em; }
+  .who-stats span { display: block; margin-top: 3px; font-size: 12px; line-height: 1.35; color: var(--text-soft); }
+  .eco { display: grid; grid-template-columns: 250px 1fr; gap: 22px; align-items: center; }
+  .eco-map { width: 100%; height: auto; display: block; }
+  .eco-ring { fill: none; stroke: rgba(255, 255, 255, 0.45); stroke-width: 2.2; stroke-dasharray: 0.1 9; stroke-linecap: round; }
+  .eco-spokes line { stroke: rgba(255, 255, 255, 0.22); stroke-width: 1.2; stroke-dasharray: 3 4; }
+  .eco-core { fill: rgba(255, 255, 255, 0.07); stroke: rgba(255, 255, 255, 0.3); stroke-width: 1.2; }
+  .eco-name { font: 800 19px var(--display); fill: #FFFFFF; letter-spacing: 0.01em; }
+  .eco-sl { fill: var(--rotor); }
+  .eco-sub { font: 500 8.5px var(--mono); fill: rgba(255, 255, 255, 0.7); letter-spacing: 0.14em; }
+  .eco-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px 10px; }
+  .eco-item {
+    display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start;
+    padding: 6px 10px 6px 6px; border-radius: 12px; color: var(--text); text-decoration: none;
+    border: 1px solid transparent; transition: background-color 0.15s ease, border-color 0.15s ease;
+  }
+  .eco-item:hover, .eco-item:focus-visible { background: rgba(255, 255, 255, 0.07); border-color: var(--c); }
+  .eco-item:focus-visible { outline: 2px solid var(--rotor); outline-offset: 2px; }
+  .eco-ico { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #FFFFFF; }
+  .eco-ico svg { width: 19px; height: 19px; display: block; }
+  .eco-txt { display: grid; gap: 1px; min-width: 0; }
+  .eco-verb { font: 500 11px/1.2 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--c); }
+  .eco-area { font: 700 14.5px/1.25 var(--ui); }
+  .eco-desc { font-size: 12px; line-height: 1.38; color: var(--text-soft); }
+  .who-foot { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .who-quote { margin: 0; max-width: 58ch; font: 600 15px/1.45 var(--ui); color: var(--text); }
+  .who-cta { display: flex; gap: 8px; flex: none; }
+  .who-btn {
+    font: 700 13.5px/1 var(--ui); padding: 12px 16px; border-radius: 999px;
+    background: var(--rotor); color: #FFFFFF; text-decoration: none; border: 1px solid transparent;
+    cursor: pointer; white-space: nowrap;
+  }
+  .who-btn.ghost { background: rgba(255, 255, 255, 0.08); border-color: var(--line); }
+  .who-btn:hover { filter: brightness(1.08); }
+  .who-btn:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 2px; }
+  .who-base { margin: 8px 0 0; font-size: 12px; color: var(--text-soft); }
+  body.launch .who, body.launch .who-backdrop { display: none; }
+  #who-btn .short { display: none; }
+  @media (max-width: 860px) {
+    .eco { grid-template-columns: 1fr; }
+    .eco-map { width: min(240px, 70%); margin: 0 auto; }
+    .who-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .who-stats li:last-child { grid-column: 1 / -1; }
+    .who-foot { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 560px) {
+    .who { padding: 20px 16px 16px; top: calc(env(safe-area-inset-top, 0px) + 72px); width: calc(100% - 24px); }
+    .eco-list { grid-template-columns: 1fr; }
+    .who-cta { width: 100%; }
+    .who-btn { flex: 1; text-align: center; }
+    #who-btn .long { display: none; }
+    #who-btn .short { display: inline; }
+    .status { display: none; }
+  }
+
   /* Cursor ring (mouse only) */
   .ring {
     position: fixed; z-index: 10; left: 0; top: 0;
@@ -473,6 +559,15 @@
   // Pick the layout before the first paint: destinations around the drone on wide screens, a list otherwise.
   (function (w, h, c) { if (w >= 960 && h >= 560 && w / h >= 1.25) c.add('orbit'); else if (w / h < 1.15) c.add('sheet'); })(window.innerWidth, window.innerHeight, document.documentElement.classList);
 </script>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-academia" viewBox="0 0 24 24"><path d="M22 9l-10 -4l-10 4l10 4l10 -4v6"/><path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4"/></symbol>
+  <symbol id="i-asesorias" viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M13 17.5v4.5l2 -1.5l2 1.5v-4.5"/><path d="M10 19h-5a2 2 0 0 1 -2 -2v-10c0 -1.1 .9 -2 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -1 1.73"/><path d="M6 9l12 0"/><path d="M6 12l3 0"/><path d="M6 15l2 0"/></symbol>
+  <symbol id="i-tienda" viewBox="0 0 24 24"><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5"/><path d="M12 12l8 -4.5"/><path d="M12 12l0 9"/><path d="M12 12l-8 -4.5"/><path d="M16 5.25l-8 4.5"/></symbol>
+  <symbol id="i-agro" viewBox="0 0 24 24"><path d="M2.5 4.5h7"/><path d="M14.5 4.5h7"/><path d="M6 4.5v3"/><path d="M18 4.5v3"/><path d="M3.5 7.5h17"/><path d="M9 7.5h6v3a1.5 1.5 0 0 1 -1.5 1.5h-3a1.5 1.5 0 0 1 -1.5 -1.5z"/><path d="M10.5 14l-2.5 4"/><path d="M12 14v4.5"/><path d="M13.5 14l2.5 4"/><path d="M7 21h.01"/><path d="M12 21.5h.01"/><path d="M17 21h.01"/></symbol>
+  <symbol id="i-servicios" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21v-12l5 4v-4l5 4h4"/><path d="M19 21v-8l-1.436 -9.574a.5 .5 0 0 0 -.495 -.426h-1.145a.5 .5 0 0 0 -.494 .418l-1.43 8.582"/><path d="M9 17h1"/><path d="M14 17h1"/></symbol>
+  <symbol id="i-pilotos" viewBox="0 0 24 24"><path d="M5 9h14a2 2 0 0 1 2 2v6a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-6a2 2 0 0 1 2 -2z"/><path d="M6 14.5a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M14 14.5a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M7.5 9l-1.5 -5.5"/><path d="M16.5 9l1.5 -5.5"/><path d="M11 12h2"/></symbol>
+  <symbol id="i-antidrones" viewBox="0 0 24 24"><path d="M14 14h-4v-4"/><path d="M10 10l-3.5 -3.5"/><path d="M9.957 5.95a3.503 3.503 0 0 0 -2.917 -2.91m-3.02 .989a3.5 3.5 0 0 0 1.98 5.936"/><path d="M14 10l3.5 -3.5"/><path d="M18 9.965a3.5 3.5 0 1 0 -3.966 -3.965"/><path d="M14 14l3.5 3.5"/><path d="M14.035 18a3.5 3.5 0 0 0 5.936 1.98m.987 -3.026a3.503 3.503 0 0 0 -2.918 -2.913"/><path d="M10 14l-3.5 3.5"/><path d="M6 14.035a3.5 3.5 0 1 0 3.966 3.965"/><path d="M3 3l18 18"/></symbol>
+</svg>
 
 <div class="stage" id="stage">
   <div class="shade"></div>
@@ -487,7 +582,7 @@
 <nav class="nav" aria-label="Principal">
   <a class="logo" href="#top">HDRONES<span>//</span><small>Chile</small></a>
   <ul>
-    <li class="home"><a href="#top" aria-current="page">Inicio</a></li>
+    <li><button type="button" id="who-btn" aria-expanded="false" aria-controls="who"><span class="long">Quiénes somos</span><span class="short">Nosotros</span></button></li>
     <li><span class="status" aria-live="polite"><i></i><span class="lbl">Destino:&nbsp;</span><b id="dest-nav">—</b></span></li>
     <li><button type="button" id="contact-btn" aria-expanded="false" aria-controls="contact">Contacto</button></li>
     <li><button type="button" id="about-btn" aria-expanded="false" aria-controls="about"><span class="long">Cómo funciona</span><span class="short">Info</span></button></li>
@@ -498,6 +593,41 @@
   <h2>Un dron, todas nuestras webs</h2>
   <p>Los destinos orbitan alrededor del dron. Acerca el cursor a uno y el dron se va vistiendo poco a poco con el uniforme de esa web; si te alejas, se lo quita, y a medio camino entre dos destinos vuelve a quedar con sus audífonos. Al hacer clic termina de vestirse, pasa a primer plano y despega hacia allá. En el teléfono, arrastra el dedo hacia un botón.</p>
   <p>Atajos directos: <code>hdroneschile.cl/academia</code>, <code>/asesorias</code>, <code>/tienda</code>, <code>/agro</code>, <code>/servicios</code>, <code>/pilotos</code> y <code>/antidrones</code>.</p>
+</section>
+
+<div class="who-backdrop" id="who-backdrop" hidden></div>
+<section class="who" id="who" role="dialog" aria-labelledby="who-title" hidden>
+  <button type="button" class="who-close" id="who-close" aria-label="Cerrar Quiénes somos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <p class="who-kicker">Quiénes somos</p>
+  <h2 id="who-title">HDRONES<span>®</span>, un ecosistema de drones</h2>
+  <p class="who-lead">Somos la Academia de Drones de Chile, pioneros en capacitación de drones en el país. Reunimos en un solo ecosistema todo lo que una operación con drones necesita: formamos a los pilotos, certificamos a las empresas ante la DGAC, las equipamos con tecnología DJI, operamos servicios para la industria y protegemos el espacio aéreo.</p>
+  <ul class="who-stats">
+    <li><b>+12 años</b><span>formando pilotos de drones</span></li>
+    <li><b>+16.000</b><span>operadores capacitados</span></li>
+    <li><b>AOC N°1688</b><span>empresa aérea certificada por la DGAC</span></li>
+    <li><b>4 ciudades</b><span>Santiago, Antofagasta, Viña del Mar y Temuco</span></li>
+    <li><b>Dubái</b><span>certificación internacional para operar</span></li>
+  </ul>
+  <div class="eco">
+    <svg class="eco-map" viewBox="0 0 300 300" aria-hidden="true" focusable="false"><circle class="eco-ring" cx="150" cy="150" r="112"/><g class="eco-spokes"><line x1="150.0" y1="96.0" x2="150.0" y2="67.0"/><line x1="192.2" y1="116.3" x2="214.9" y2="98.3"/><line x1="202.6" y1="162.0" x2="230.9" y2="168.5"/><line x1="173.4" y1="198.7" x2="186.0" y2="224.8"/><line x1="126.6" y1="198.7" x2="114.0" y2="224.8"/><line x1="97.4" y1="162.0" x2="69.1" y2="168.5"/><line x1="107.8" y1="116.3" x2="85.1" y2="98.3"/></g><circle class="eco-core" cx="150" cy="150" r="52"/><text x="150" y="150" text-anchor="middle" class="eco-name">HDRONES<tspan class="eco-sl">//</tspan></text><text x="150" y="169" text-anchor="middle" class="eco-sub">ECOSISTEMA</text><circle cx="150.0" cy="38.0" r="25" fill="#4DA3FF"/><svg x="137.0" y="25.0" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-academia"/></svg><circle cx="237.6" cy="80.2" r="25" fill="#9B7BFF"/><svg x="224.6" y="67.2" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-asesorias"/></svg><circle cx="259.2" cy="174.9" r="25" fill="#FF8B3D"/><svg x="246.2" y="161.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-tienda"/></svg><circle cx="198.6" cy="250.9" r="25" fill="#6CCB5F"/><svg x="185.6" y="237.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-agro"/></svg><circle cx="101.4" cy="250.9" r="25" fill="#FFC24A"/><svg x="88.4" y="237.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-servicios"/></svg><circle cx="40.8" cy="174.9" r="25" fill="#E05A8C"/><svg x="27.8" y="161.9" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pilotos"/></svg><circle cx="62.4" cy="80.2" r="25" fill="#5FD3D3"/><svg x="49.4" y="67.2" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><use href="#i-antidrones"/></svg></svg>
+    <ol class="eco-list">
+      <li style="--c:#4DA3FF"><a class="eco-item" href="https://www.academiadronchile.cl/" data-go="academia"><span class="eco-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-academia"/></svg></span><span class="eco-txt"><span class="eco-verb">Formamos</span><span class="eco-area">Academia de Drones</span><span class="eco-desc">Cursos de piloto con credencial DGAC y especializaciones en fotogrametría, inspección, topografía, minería y seguridad.</span></span></a></li>
+      <li style="--c:#9B7BFF"><a class="eco-item" href="https://asesoriasdedrones.cl/" data-go="asesorias"><span class="eco-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-asesorias"/></svg></span><span class="eco-txt"><span class="eco-verb">Certificamos</span><span class="eco-area">Asesorías AOC y RPA</span><span class="eco-desc">Acompañamos a las empresas en la certificación AOC y el registro de sus RPA ante la DGAC.</span></span></a></li>
+      <li style="--c:#FF8B3D"><a class="eco-item" href="https://ventadronchile.cl/" data-go="tienda"><span class="eco-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-tienda"/></svg></span><span class="eco-txt"><span class="eco-verb">Equipamos</span><span class="eco-area">Tienda DJI</span><span class="eco-desc">Drones y accesorios DJI, con asesoría para elegir el equipo de cada operación.</span></span></a></li>
+      <li style="--c:#6CCB5F"><a class="eco-item" href="https://agricolatech.cl/" data-go="agro"><span class="eco-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-agro"/></svg></span><span class="eco-txt"><span class="eco-verb">Tecnificamos el agro</span><span class="eco-area">Drones agrícolas</span><span class="eco-desc">Drones DJI Agras para aplicaciones agrícolas de precisión.</span></span></a></li>
+      <li style="--c:#FFC24A"><a class="eco-item" href="https://hdronestech.cl/" data-go="servicios"><span class="eco-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-servicios"/></svg></span><span class="eco-txt"><span class="eco-verb">Operamos</span><span class="eco-area">Servicios con drones</span><span class="eco-desc">Fotogrametría, topografía minera, inspección industrial y termográfica, y filmación aérea.</span></span></a></li>
+      <li style="--c:#E05A8C"><a class="eco-item" href="https://pilotodedrones.cl/" data-go="pilotos"><span class="eco-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pilotos"/></svg></span><span class="eco-txt"><span class="eco-verb">Conectamos</span><span class="eco-area">Red de pilotos</span><span class="eco-desc">Pilotos certificados para proyectos en todo Chile.</span></span></a></li>
+      <li style="--c:#5FD3D3"><a class="eco-item" href="https://antidrones.cl/" data-go="antidrones"><span class="eco-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-antidrones"/></svg></span><span class="eco-txt"><span class="eco-verb">Protegemos</span><span class="eco-area">Antidrones</span><span class="eco-desc">Detección de drones no autorizados para resguardar instalaciones.</span></span></a></li>
+    </ol>
+  </div>
+  <div class="who-foot">
+    <blockquote class="who-quote">«No enseñar a volar por enseñar a volar, sino entender el problema y adaptar la tecnología para ayudar a resolverlo.»</blockquote>
+    <div class="who-cta">
+      <a class="who-btn" href="https://wa.me/56994677613" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
+      <button type="button" class="who-btn ghost" id="who-contact">Ver contacto</button>
+    </div>
+  </div>
+  <p class="who-base">Sede académica en Providencia y centro de vuelo en Padre Hurtado, Región Metropolitana.</p>
 </section>
 
 <section class="contact" id="contact" hidden>
@@ -544,7 +674,7 @@
     <a class="dest" id="dest-academia" href="https://www.academiadronchile.cl/"
        data-clip="academia" data-angle="82" data-short="Academia" data-uniform="Instructor" data-color="#4DA3FF" data-path="/academia" style="--c:#4DA3FF">
       <span class="ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5c1.2-3.6 4.2-5.5 8-5.5s6.8 1.9 8 5.5"/><path d="M3 12.5h18v1.2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 7V4.8"/><path d="M9.5 18.5h5"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-academia"/></svg>
       </span>
       <span class="txt">
         <span class="name">Academia de Drones</span>
@@ -556,7 +686,7 @@
     <a class="dest" id="dest-asesorias" href="https://asesoriasdedrones.cl/"
        data-clip="asesorias" data-angle="125" data-short="Asesorías" data-uniform="Asesor DGAC" data-color="#9B7BFF" data-path="/asesorias" style="--c:#9B7BFF">
       <span class="ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7.5L19 8v12.5H7z"/><path d="M14.5 3.5V8H19"/><path d="M9.5 12h7M9.5 15.5h7"/><path d="M4.5 8.5v12.5h10"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-asesorias"/></svg>
       </span>
       <span class="txt">
         <span class="name">Asesorías AOC y RPA</span>
@@ -568,7 +698,7 @@
     <a class="dest" id="dest-tienda" href="https://ventadronchile.cl/"
        data-clip="tienda" data-angle="175" data-short="Tienda" data-uniform="Vendedor" data-color="#FF8B3D" data-path="/tienda" style="--c:#FF8B3D">
       <span class="ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5h14l-1 11.5H6z"/><path d="M8.5 8.5V7a3.5 3.5 0 0 1 7 0v1.5"/><path d="M9.5 12.5h5"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-tienda"/></svg>
       </span>
       <span class="txt">
         <span class="name">Tienda DJI</span>
@@ -580,7 +710,7 @@
     <a class="dest" id="dest-agro" href="https://agricolatech.cl/"
        data-clip="agro" data-angle="215" data-short="Agrícola" data-uniform="Agricultor" data-color="#6CCB5F" data-path="/agro" style="--c:#6CCB5F">
       <span class="ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5V11"/><path d="M12 11c-4.5 0-7-2.6-7-6.5 4.5 0 7 2.6 7 6.5z"/><path d="M12 14c4.5 0 7-2.6 7-6.5-4.5 0-7 2.6-7 6.5z"/><path d="M5.5 20.5h13"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-agro"/></svg>
       </span>
       <span class="txt">
         <span class="name">Drones agrícolas</span>
@@ -592,7 +722,7 @@
     <a class="dest" id="dest-servicios" href="https://hdronestech.cl/"
        data-clip="servicios" data-angle="258" data-short="Servicios" data-uniform="Operador industrial" data-color="#FFC24A" data-path="/servicios" style="--c:#FFC24A">
       <span class="ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 15.5a7.5 7.5 0 0 1 15 0"/><path d="M3 15.5h18"/><path d="M12 8V5"/><path d="M9.5 18.5h5"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-servicios"/></svg>
       </span>
       <span class="txt">
         <span class="name">Servicios con drones</span>
@@ -604,7 +734,7 @@
     <a class="dest" id="dest-pilotos" href="https://pilotodedrones.cl/"
        data-clip="pilotos" data-angle="305" data-short="Pilotos" data-uniform="Piloto profesional" data-color="#E05A8C" data-path="/pilotos" style="--c:#E05A8C">
       <span class="ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.5-5.5 7-5.5s6.2 1.9 7 5.5"/><path d="M2.5 11.5 6 10M21.5 11.5 18 10"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-pilotos"/></svg>
       </span>
       <span class="txt">
         <span class="name">Red de pilotos</span>
@@ -616,7 +746,7 @@
     <a class="dest" id="dest-antidrones" href="https://antidrones.cl/"
        data-clip="antidrones" data-angle="35" data-short="Antidrones" data-uniform="Guardia de seguridad" data-color="#5FD3D3" data-path="/antidrones" style="--c:#5FD3D3">
       <span class="ico" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 5 6v6c0 4.2 3 7.4 7 8.5 4-1.1 7-4.3 7-8.5V6z"/><path d="M9 12.2l2 2 4-4.2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><use href="#i-antidrones"/></svg>
       </span>
       <span class="txt">
         <span class="name">Antidrones</span>
@@ -665,6 +795,10 @@
   var aboutPanel = document.getElementById('about');
   var contactBtn = document.getElementById('contact-btn');
   var contactPanel = document.getElementById('contact');
+  var whoBtn = document.getElementById('who-btn');
+  var whoPanel = document.getElementById('who');
+  var whoBackdrop = document.getElementById('who-backdrop');
+  var whoClose = document.getElementById('who-close');
   var launchName = document.getElementById('launch-name');
   var launchUniform = document.getElementById('launch-uniform');
   var navEl = document.querySelector('.nav');
@@ -1113,6 +1247,7 @@
     }
     pointer = { x: e.clientX, y: e.clientY };
     moveRing(e.clientX, e.clientY);
+    if (!whoPanel.hidden) return;                    // reading Quiénes somos: the drone waits
     follow(e.clientX, e.clientY);
     startPrefetch();
   }, { passive: true });
@@ -1139,16 +1274,27 @@
     s.el.addEventListener('blur', function () { if (pointer) follow(pointer.x, pointer.y); else setActive(active, 0); });
 
     // Click: the drone finishes dressing, comes to the foreground, takes off, then we go to the site.
-    s.el.addEventListener('click', function (e) {
-      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      if (launching) { e.preventDefault(); return; }
-      if (embedded) {                                    // inside a preview frame the link opens in a new tab on its own
-        s.el.target = '_blank'; s.el.rel = 'noopener';
-        launch(s, null);
-        return;
-      }
-      e.preventDefault();
-      launch(s, s.url);
+    s.el.addEventListener('click', function (e) { go(s, e, s.el); });
+  });
+  function go(s, e, link) {
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (launching) { e.preventDefault(); return; }
+    if (embedded) {                                    // inside a preview frame the link opens in a new tab on its own
+      link.target = '_blank'; link.rel = 'noopener';
+      launch(s, null);
+      return;
+    }
+    e.preventDefault();
+    launch(s, s.url);
+  }
+  // Quiénes somos: each area of the ecosystem sends the drone off to its site, like the destinations.
+  [].slice.call(document.querySelectorAll('.eco-item')).forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var s = null;
+      SITES.forEach(function (x) { if (x.id === a.getAttribute('data-go')) s = x; });
+      if (!s) return;
+      if (e.button === 0 && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) setWho(false);
+      go(s, e, a);
     });
   });
 
@@ -1156,7 +1302,7 @@
     launching = true;
     pending = null;
     if (site !== active) { active = site; applyActive(); }
-    setAbout(false); setContact(false);
+    setAbout(false); setContact(false); setWho(false);
     launchName.textContent = site.el.querySelector('.name').textContent;
     launchUniform.textContent = site.uniform || site.shortName;
     var p = playerOf(site);
@@ -1213,20 +1359,39 @@
   function setAbout(open) {
     aboutPanel.hidden = !open;
     aboutBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open) setContact(false);
+    if (open) { setContact(false); setWho(false); }
   }
   function setContact(open) {
     contactPanel.hidden = !open;
     contactBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if (open) { aboutPanel.hidden = true; aboutBtn.setAttribute('aria-expanded', 'false'); }
+    if (open) { aboutPanel.hidden = true; aboutBtn.setAttribute('aria-expanded', 'false'); setWho(false); }
+  }
+  function setWho(open) {
+    if (whoPanel.hidden === !open) return;
+    whoPanel.hidden = !open; whoBackdrop.hidden = !open;
+    whoBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) {
+      setAbout(false); setContact(false);
+      setActive(active, 0);                          // the drone takes its uniform off while the panel is open
+      whoPanel.scrollTop = 0;
+      try { whoClose.focus({ preventScroll: true }); } catch (e) { whoClose.focus(); }
+    }
   }
   aboutBtn.addEventListener('click', function (e) { e.stopPropagation(); setAbout(aboutPanel.hidden); });
   contactBtn.addEventListener('click', function (e) { e.stopPropagation(); setContact(contactPanel.hidden); });
+  whoBtn.addEventListener('click', function (e) { e.stopPropagation(); setWho(whoPanel.hidden); });
+  whoClose.addEventListener('click', function () { setWho(false); whoBtn.focus(); });
+  whoBackdrop.addEventListener('click', function () { setWho(false); });
+  document.getElementById('who-contact').addEventListener('click', function (e) { e.stopPropagation(); setContact(true); });
   document.addEventListener('click', function (e) {
     if (!aboutPanel.hidden && !aboutPanel.contains(e.target) && e.target !== aboutBtn) setAbout(false);
     if (!contactPanel.hidden && !contactPanel.contains(e.target) && !contactBtn.contains(e.target)) setContact(false);
   });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { setAbout(false); setContact(false); } });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (!whoPanel.hidden) whoBtn.focus();
+    setAbout(false); setContact(false); setWho(false);
+  });
 
   // ---- Boot ------------------------------------------------------------------------------------
   // #academia, #asesorias, #tienda… deep-link to a destination.
