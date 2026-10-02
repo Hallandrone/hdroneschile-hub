@@ -205,6 +205,8 @@
     display: flex; flex-direction: column; align-items: flex-start; gap: 16px;
     width: min(600px, calc(100% - 2 * var(--gutter)));
   }
+  .headline { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+  .hint { display: none; }
   .eyebrow {
     margin: 0;
     font: 500 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
@@ -268,6 +270,69 @@
   .dest:hover .tag, .dest:focus-visible .tag { color: var(--ink); background: rgba(14, 42, 71, 0.08); }
   @media (max-width: 1500px) { .dest .tag { display: none; } .dest { grid-template-columns: 36px 1fr; } }
 
+  /* Orbit layout (wide screens): the destinations sit around the drone, far from each other, so each one
+     owns a wide area of the screen. The closer the cursor gets to one, the more the drone dresses for it
+     (the panda effect); halfway between two destinations it is back to neutral. The script places them. */
+  .orbit-svg { position: fixed; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; display: none; overflow: visible; transition: opacity 0.8s ease; }
+  .orbit .orbit-svg { display: block; }
+  .orbit-ring { fill: none; stroke: rgba(255, 255, 255, 0.5); stroke-width: 2.4; stroke-dasharray: 0.1 13; stroke-linecap: round; }
+  .route {
+    fill: none; stroke: #FFFFFF; stroke-width: 3.4; stroke-linecap: round;
+    stroke-dasharray: 0.1 9; opacity: 0;
+    filter: drop-shadow(0 0 3px var(--dest)) drop-shadow(0 0 1px rgba(8, 26, 44, 0.55));
+    animation: route-flow 0.7s linear infinite;
+  }
+  @keyframes route-flow { to { stroke-dashoffset: -9.1; } }
+  body.launch .orbit-svg { opacity: 0; }
+
+  .orbit .copy { left: 0; top: 0; right: 0; bottom: 0; width: auto; display: block; pointer-events: none; }
+  .orbit .headline {
+    position: absolute; left: var(--gutter); top: calc(env(safe-area-inset-top, 0px) + 100px);
+    max-width: min(400px, 30vw); gap: 14px; pointer-events: auto;
+  }
+  .orbit .eyebrow { display: block; letter-spacing: 0.06em; }
+  @media (max-height: 800px), (max-width: 1240px) { .orbit .eyebrow { display: none; } .orbit .hint { font-size: 14px; } }
+  .orbit h1 { font-size: clamp(32px, 3.3vw, 60px); }
+  .orbit .hint { display: block; margin: 0; max-width: 30ch; font: 500 15px/1.45 var(--ui); color: var(--text-soft); text-shadow: 0 1px 12px var(--shadow); }
+  .hint .for-touch { display: none; }
+  @media (hover: none) { .hint .for-mouse { display: none; } .hint .for-touch { display: inline; } }
+  .orbit .dests { display: block; position: absolute; inset: 0; width: auto; pointer-events: none; }
+  .orbit .dest {
+    position: absolute; left: 0; top: 0;
+    display: flex; align-items: center; gap: 10px;
+    width: max-content; max-width: 300px;
+    padding: 5px 16px 5px 5px; border-radius: 999px;
+    pointer-events: auto;
+    transform: translate3d(var(--x, -9999px), var(--y, 0px), 0) scale(var(--s, 1));
+    transform-origin: var(--ax, 25px) 50%;
+  }
+  .orbit .dest.flip { flex-direction: row-reverse; padding: 5px 5px 5px 16px; text-align: right; }
+  .orbit .dest:hover, .orbit .dest:focus-visible { transform: translate3d(var(--x, -9999px), var(--y, 0px), 0) scale(calc(var(--s, 1) + 0.03)); }
+  .orbit .dest .ico { position: relative; width: 40px; height: 40px; border-radius: 50%; flex: none; }
+  .orbit .dest:not(:hover):not(:focus-visible) .ico { background: color-mix(in srgb, var(--c) calc(var(--p, 0) * 100%), rgba(255, 255, 255, 0.12)); }
+  .orbit .dest .ico::before {   /* how dressed the drone is for this destination */
+    content: ""; position: absolute; inset: -4px; border-radius: 50%; pointer-events: none;
+    background: conic-gradient(var(--c) calc(var(--p, 0) * 360deg), rgba(255, 255, 255, 0.24) 0deg);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
+            mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2.5px));
+  }
+  .orbit .dest .name { font-size: 14px; }
+  .orbit .dest .meta { display: block; }
+  .orbit .dest .meta em { display: none; }
+  .orbit .dest .tag {   /* the uniform being put on, on the side of the chip away from the drone */
+    display: inline-flex; position: absolute; left: var(--ax, 25px); top: calc(100% + 8px);
+    transform: translateX(-50%); pointer-events: none; white-space: nowrap;
+    color: #fff; background: rgba(8, 26, 44, 0.58);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    opacity: calc(var(--p, 0) * 1.6 - 0.15);
+  }
+  .orbit .dest.tag-above .tag { top: auto; bottom: calc(100% + 8px); }
+  .orbit .dest.tag-side .tag { top: 50%; left: calc(100% + 8px); transform: translateY(-50%); }
+  .orbit .dest.tag-side.flip .tag { left: auto; right: calc(100% + 8px); }
+  .orbit .dest:not(.near):not(:hover):not(:focus-visible) { opacity: calc(1 - var(--focus, 0) * 0.4); }
+  .orbit .dest:hover .tag, .orbit .dest:focus-visible .tag { color: #fff; background: rgba(8, 26, 44, 0.58); }
+  .orbit .dest:hover .ico, .orbit .dest:focus-visible .ico { background: var(--c); color: #fff; }
+
   /* Drone telemetry */
   .hud {
     position: fixed; z-index: 4;
@@ -320,7 +385,9 @@
   }
 
   @media (max-height: 760px) {
-    .copy { gap: 10px; bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); }
+    .copy, .headline { gap: 10px; }
+    .copy { bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); }
+    .orbit .headline { top: calc(env(safe-area-inset-top, 0px) + 88px); }
     h1 { font-size: clamp(28px, 3.4vw, 44px); }
     .eyebrow { display: none; }
     .dest { padding: 6px 8px 6px 6px; }
@@ -333,6 +400,7 @@
     .nav .home, .logo small { display: none; }
     .nav a, .nav button, .status { padding: 10px 9px; font-size: 13px; }
     .copy { left: 16px; right: 16px; width: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 64px); gap: 10px; }
+    .headline { gap: 10px; }
     h1 { font-size: clamp(30px, 9vw, 44px); }
     .dests { grid-template-columns: 1fr; gap: 6px; }
     .dest { grid-template-columns: 32px 1fr; padding: 6px 8px 6px 6px; }
@@ -360,17 +428,27 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .dest, .ring, .status i, .stage, .stage video, .tint, .flash, .launch-label, .vignette, .shade { transition: none; }
+    .dest, .ring, .status i, .stage, .stage video, .tint, .flash, .launch-label, .vignette, .shade, .orbit-svg { transition: none; }
+    .route { animation: none; }
     .stage { transform: none !important; filter: none !important; }
     body.launch .copy, body.launch .hud, body.launch .nav, body.takeoff .launch-label { transform: none; }
     body.launch .launch-label .bar i { transition: none; }
   }
 </style>
+<script>
+  // Pick the layout before the first paint: destinations around the drone on wide screens, a list otherwise.
+  (function (w, h) { if (w >= 960 && h >= 560 && w / h >= 1.25) document.documentElement.classList.add('orbit'); })(window.innerWidth, window.innerHeight);
+</script>
 
 <div class="stage" id="stage">
   <div class="shade"></div>
   <div class="tint" id="tint"></div>
 </div>
+
+<svg class="orbit-svg" id="orbit-svg" aria-hidden="true" focusable="false">
+  <ellipse class="orbit-ring" id="orbit-ring" cx="-100" cy="-100" rx="1" ry="1"></ellipse>
+  <path class="route" id="route" d="M0 0"></path>
+</svg>
 
 <nav class="nav" aria-label="Principal">
   <a class="logo" href="#top">HDRONES<span>//</span><small>Chile</small></a>
@@ -384,7 +462,7 @@
 
 <section class="about" id="about" hidden>
   <h2>Un dron, todas nuestras webs</h2>
-  <p>El dron reacciona a tu cursor. Mientras te acercas a un destino se va cambiando de uniforme según la web a la que te va a llevar; al pulsar el botón, termina de vestirse, pasa a primer plano y despega hacia allá. En el teléfono, arrastra el dedo hacia un botón.</p>
+  <p>Los destinos orbitan alrededor del dron. Acerca el cursor a uno y el dron se va vistiendo poco a poco con el uniforme de esa web; si te alejas, se lo quita, y a medio camino entre dos destinos vuelve a quedar con sus audífonos. Al hacer clic termina de vestirse, pasa a primer plano y despega hacia allá. En el teléfono, arrastra el dedo hacia un botón.</p>
   <p>Atajos directos: <code>hdroneschile.cl/academia</code>, <code>/asesorias</code>, <code>/tienda</code>, <code>/agro</code>, <code>/servicios</code>, <code>/pilotos</code> y <code>/antidrones</code>.</p>
 </section>
 
@@ -422,12 +500,15 @@
 </section>
 
 <main class="copy" id="top">
-  <p class="eyebrow"><b>hdroneschile.cl</b> · un dron, todas nuestras webs</p>
-  <h1>¿A dónde<br>volamos hoy?</h1>
+  <div class="headline" id="headline">
+    <p class="eyebrow"><b>hdroneschile.cl</b> · un dron, todas nuestras webs</p>
+    <h1>¿A dónde<br>volamos hoy?</h1>
+    <p class="hint"><span class="for-mouse">Acerca el cursor a un destino y el dron se irá vistiendo para el viaje. Haz clic y despega.</span><span class="for-touch">Toca un destino y el dron despega hacia esa web.</span></p>
+  </div>
 
   <nav class="dests" id="dests" aria-label="Nuestras webs">
     <a class="dest" id="dest-academia" href="https://www.academiadronchile.cl/"
-       data-clip="academia" data-short="Academia" data-uniform="Instructor" data-color="#4DA3FF" data-path="/academia" style="--c:#4DA3FF">
+       data-clip="academia" data-angle="82" data-short="Academia" data-uniform="Instructor" data-color="#4DA3FF" data-path="/academia" style="--c:#4DA3FF">
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5c1.2-3.6 4.2-5.5 8-5.5s6.8 1.9 8 5.5"/><path d="M3 12.5h18v1.2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 7V4.8"/><path d="M9.5 18.5h5"/></svg>
       </span>
@@ -439,7 +520,7 @@
     </a>
 
     <a class="dest" id="dest-asesorias" href="https://asesoriasdedrones.cl/"
-       data-clip="asesorias" data-short="Asesorías" data-uniform="Asesor DGAC" data-color="#9B7BFF" data-path="/asesorias" style="--c:#9B7BFF">
+       data-clip="asesorias" data-angle="125" data-short="Asesorías" data-uniform="Asesor DGAC" data-color="#9B7BFF" data-path="/asesorias" style="--c:#9B7BFF">
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h7.5L19 8v12.5H7z"/><path d="M14.5 3.5V8H19"/><path d="M9.5 12h7M9.5 15.5h7"/><path d="M4.5 8.5v12.5h10"/></svg>
       </span>
@@ -451,7 +532,7 @@
     </a>
 
     <a class="dest" id="dest-tienda" href="https://ventadronchile.cl/"
-       data-clip="tienda" data-short="Tienda" data-uniform="Vendedor" data-color="#FF8B3D" data-path="/tienda" style="--c:#FF8B3D">
+       data-clip="tienda" data-angle="175" data-short="Tienda" data-uniform="Vendedor" data-color="#FF8B3D" data-path="/tienda" style="--c:#FF8B3D">
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5h14l-1 11.5H6z"/><path d="M8.5 8.5V7a3.5 3.5 0 0 1 7 0v1.5"/><path d="M9.5 12.5h5"/></svg>
       </span>
@@ -463,7 +544,7 @@
     </a>
 
     <a class="dest" id="dest-agro" href="https://agricolatech.cl/"
-       data-clip="agro" data-short="Agrícola" data-uniform="Agricultor" data-color="#6CCB5F" data-path="/agro" style="--c:#6CCB5F">
+       data-clip="agro" data-angle="215" data-short="Agrícola" data-uniform="Agricultor" data-color="#6CCB5F" data-path="/agro" style="--c:#6CCB5F">
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5V11"/><path d="M12 11c-4.5 0-7-2.6-7-6.5 4.5 0 7 2.6 7 6.5z"/><path d="M12 14c4.5 0 7-2.6 7-6.5-4.5 0-7 2.6-7 6.5z"/><path d="M5.5 20.5h13"/></svg>
       </span>
@@ -475,7 +556,7 @@
     </a>
 
     <a class="dest" id="dest-servicios" href="https://hdronestech.cl/"
-       data-clip="servicios" data-short="Servicios" data-uniform="Operador industrial" data-color="#FFC24A" data-path="/servicios" style="--c:#FFC24A">
+       data-clip="servicios" data-angle="258" data-short="Servicios" data-uniform="Operador industrial" data-color="#FFC24A" data-path="/servicios" style="--c:#FFC24A">
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 15.5a7.5 7.5 0 0 1 15 0"/><path d="M3 15.5h18"/><path d="M12 8V5"/><path d="M9.5 18.5h5"/></svg>
       </span>
@@ -487,7 +568,7 @@
     </a>
 
     <a class="dest" id="dest-pilotos" href="https://pilotodedrones.cl/"
-       data-clip="pilotos" data-short="Pilotos" data-uniform="Piloto profesional" data-color="#E05A8C" data-path="/pilotos" style="--c:#E05A8C">
+       data-clip="pilotos" data-angle="305" data-short="Pilotos" data-uniform="Piloto profesional" data-color="#E05A8C" data-path="/pilotos" style="--c:#E05A8C">
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.5-5.5 7-5.5s6.2 1.9 7 5.5"/><path d="M2.5 11.5 6 10M21.5 11.5 18 10"/></svg>
       </span>
@@ -499,7 +580,7 @@
     </a>
 
     <a class="dest" id="dest-antidrones" href="https://antidrones.cl/"
-       data-clip="antidrones" data-short="Antidrones" data-uniform="Guardia de seguridad" data-color="#5FD3D3" data-path="/antidrones" style="--c:#5FD3D3">
+       data-clip="antidrones" data-angle="35" data-short="Antidrones" data-uniform="Guardia de seguridad" data-color="#5FD3D3" data-path="/antidrones" style="--c:#5FD3D3">
       <span class="ico" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 5 6v6c0 4.2 3 7.4 7 8.5 4-1.1 7-4.3 7-8.5V6z"/><path d="M9 12.2l2 2 4-4.2"/></svg>
       </span>
@@ -536,6 +617,7 @@
 
 <script>
 (function () {
+  var root = document.documentElement;
   var stage = document.getElementById('stage');
   var tint = document.getElementById('tint');
   var ring = document.getElementById('ring');
@@ -549,17 +631,30 @@
   var aboutPanel = document.getElementById('about');
   var contactBtn = document.getElementById('contact-btn');
   var contactPanel = document.getElementById('contact');
-  var launchEl = document.getElementById('launch-label');
   var launchName = document.getElementById('launch-name');
   var launchUniform = document.getElementById('launch-uniform');
-  var rootStyle = document.documentElement.style;
+  var navEl = document.querySelector('.nav');
+  var hudEl = document.querySelector('.hud');
+  var headlineEl = document.getElementById('headline');
+  var orbitRing = document.getElementById('orbit-ring');
+  var routeEl = document.getElementById('route');
+  var rootStyle = root.style;
 
-  // Tuning: how cursor distance to a destination maps to that destination's clip.
+  // Tuning: how the cursor's distance to the destinations drives the drone's clips.
   var CONFIG = {
+    // Wide screens (orbit). As with the panda, the clip advances as the cursor gets closer to a destination
+    // (1 - distance / reach), weighted by how clearly that destination is the nearest one: the drone is
+    // neutral over itself and halfway between two destinations, and fully dressed on top of one.
+    dominance: 0.5,            // exponent of the "clearly the nearest" weight (lower = starts dressing sooner)
+    reach: 0.5,                // a destination's reach: its distance to the drone, capped at this share of the shorter side
+    minReach: 180,
+    switchAt: 0.035,           // swap clips only once the current uniform is off (all clips start on the same frame)
+    rewind: 0.24,              // smoothing while a uniform comes off before switching (faster than dressing)
+    // Phones and narrow windows (list): the nearest button reacts from up to this far away.
     influence: 0.8,            // share of the shorter viewport side where a destination starts reacting
     minInfluence: 320, maxInfluence: 820,
     curve: [[1, 0], [0.6, 0.3], [0.15, 0.72], [0, 1]], // [distance ratio, clip progress]
-    response: 0.14,            // smoothing per animation frame (0-1)
+    response: 0.14,            // smoothing per 60 Hz frame (0-1); the same feel at any refresh rate
     seekFps: 30,               // max seeks per second per clip
     fps: 24,                   // frame rate of the clips
     fallbackMax: 0.42,         // destinations without their own clip reuse the base clip up to here (eyes open, looking)
@@ -568,19 +663,26 @@
     closeupSeconds: 3.0,       // phase 2: close-up on the drone
     takeoffSeconds: 1.6        // phase 3: lift-off and flash, then the site
   };
+  // Where the drone hovers in the 1920x1080 clips: centre and half-size, as shares of the frame.
+  var DRONE = { x: 0.636, y: 0.49, hw: 0.22, hh: 0.235 };
+  var ICON_HALF = 25;          // chip padding + half the icon: the icon's centre is what sits on the orbit
   var reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var embedded = false;
   try { embedded = window.top !== window.self; } catch (e) { embedded = true; }
 
   // ---- Destinations come from the markup: one <a class="dest"> each -------------------------
-  var SITES = [].slice.call(document.querySelectorAll('.dest')).map(function (a) {
+  var SITES = [].slice.call(document.querySelectorAll('.dest')).map(function (a, i, all) {
+    var angle = parseFloat(a.getAttribute('data-angle'));
     return {
       el: a, url: a.href, id: a.getAttribute('data-clip'),
       shortName: a.getAttribute('data-short') || a.textContent.trim(),
       uniform: a.getAttribute('data-uniform') || '', color: a.getAttribute('data-color') || '#FF8B3D',
-      clipKey: a.getAttribute('data-clip'), max: 1, checked: false
+      clipKey: a.getAttribute('data-clip'), max: 1, checked: false,
+      angle: isFinite(angle) ? angle : 90 + i * 360 / all.length,   // around the drone: 0 = right, 90 = above
+      rect: null, box: null, anchor: null, reach: 300, route: '', shown: -1
     };
   });
+  var longestUniform = SITES.reduce(function (m, s) { return (s.uniform || s.shortName).length > m.length ? (s.uniform || s.shortName) : m; }, '');
 
   // ---- Clip files -----------------------------------------------------------------------------
   var canMp4 = !!document.createElement('video').canPlayType('video/mp4; codecs="avc1.640028"');
@@ -592,7 +694,8 @@
   }
 
   var players = {};     // key -> player
-  var active = null;    // active site
+  var active = null;    // destination the drone is dressed (or dressing) for
+  var pending = null;   // next destination, waiting for the current uniform to come off
   var launching = false;
 
   function makePlayer(key) {
@@ -600,7 +703,7 @@
     video.muted = true; video.playsInline = true; video.setAttribute('playsinline', '');
     video.preload = 'auto'; video.setAttribute('aria-hidden', 'true'); video.tabIndex = -1;
     stage.insertBefore(video, stage.firstChild);
-    var p = { key: key, video: video, src: srcFor(key), duration: 0, ready: false, loading: false, playing: false,
+    var p = { key: key, video: video, src: srcFor(key), duration: 0, ready: false, loading: false, loadStart: 0, playing: false,
               cur: 0, tgt: 0, seeking: false, seekStarted: 0, lastSeek: 0, usingBlob: false };
     video.addEventListener('error', function () {
       if (p.usingBlob) { p.usingBlob = false; video.src = p.src; }
@@ -634,7 +737,7 @@
 
   function load(p) {
     if (p.loading) return;
-    p.loading = true;
+    p.loading = true; p.loadStart = Date.now();
     var showLink = function (v) { if (active && playerOf(active) === p) setLink(v); };
     if (!window.fetch) { p.video.src = p.src; return; }
     fetch(p.src).then(function (res) {
@@ -674,7 +777,133 @@
     });
   }
 
-  // ---- Distance to a destination -> clip progress ---------------------------------------------
+  // Once someone moves the mouse around, fetch the remaining clips one at a time, nearest first, so each
+  // destination is ready before the cursor reaches it.
+  var prefetching = false;
+  function startPrefetch() {
+    if (prefetching) return;
+    prefetching = true;
+    var c = navigator.connection;
+    if (c && (c.saveData || /2g/.test(c.effectiveType || ''))) return;
+    (function step() {
+      if (launching) return;
+      var now = Date.now(), busy = false, next = null, best = Infinity;
+      SITES.forEach(function (s) {
+        var p = players[s.clipKey];
+        if (p && p.loading && !p.ready && now - p.loadStart < 15000) busy = true;
+        if (!p || !p.loading) {
+          var d = pointer && s.rect ? rectDist(pointer.x, pointer.y, s.rect) : 0;
+          if (d < best) { best = d; next = s; }
+        }
+      });
+      if (!busy && next) ensureLoaded(next);
+      if (busy || next) setTimeout(step, 400);
+    })();
+  }
+
+  // ---- Layout -------------------------------------------------------------------------------------
+  // Wide screens: each destination sits on an ellipse around the drone at its data-angle, text on the side
+  // away from the drone, clear of the headline and the telemetry. Elsewhere the destinations are a list.
+  var orbit = false;
+  function droneOnScreen(W, H) {
+    var s = Math.max(W / 1920, H / 1080);          // the clips fill the screen (object-fit: cover, centred)
+    var ox = (W - 1920 * s) / 2, oy = (H - 1080 * s) / 2;
+    return { x: ox + DRONE.x * 1920 * s, y: oy + DRONE.y * 1080 * s, hw: DRONE.hw * 1920 * s, hh: DRONE.hh * 1080 * s };
+  }
+  function boxOf(r, pad) { return { left: r.left - pad, top: r.top - pad, right: r.right + pad, bottom: r.bottom + pad }; }
+  function hits(a, b) { return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top; }
+  function shift(b, dx, dy) { return { left: b.left + dx, top: b.top + dy, right: b.right + dx, bottom: b.bottom + dy }; }
+  function chipBox(ax, ay, w, h, flip) {
+    var left = flip ? ax + ICON_HALF - w : ax - ICON_HALF;
+    return { left: left, top: ay - h / 2, right: left + w, bottom: ay + h / 2 };
+  }
+  function fx(n) { return n.toFixed(1); }
+  function routePath(g, A) {
+    // A dotted flight path from just outside the drone to the destination's icon, gently curved.
+    var vx = A.x - g.x, vy = A.y - g.y, len = Math.sqrt(vx * vx + vy * vy) || 1;
+    var ux = vx / len, uy = vy / len;
+    var ex = g.hw * 1.04, ey = g.hh * 1.04;
+    var k = 1 / Math.sqrt((ux / ex) * (ux / ex) + (uy / ey) * (uy / ey));
+    var sx = g.x + ux * k, sy = g.y + uy * k;
+    var tx = A.x - ux * (ICON_HALF + 8), ty = A.y - uy * (ICON_HALF + 8);
+    var seg = Math.sqrt((tx - sx) * (tx - sx) + (ty - sy) * (ty - sy));
+    if (k >= len || seg < 24) return '';
+    var cx = (sx + tx) / 2 - uy * seg * 0.2, cy = (sy + ty) / 2 + ux * seg * 0.2;
+    return 'M' + fx(sx) + ' ' + fx(sy) + 'Q' + fx(cx) + ' ' + fx(cy) + ' ' + fx(tx) + ' ' + fx(ty);
+  }
+
+  function layout() {
+    var W = window.innerWidth, H = window.innerHeight;
+    var g = droneOnScreen(W, H), z = 1 + CONFIG.hoverZoom;
+    var navBottom = navEl.getBoundingClientRect().bottom;
+    var ry = Math.min(g.y - (navBottom + 46), H - 64 - g.y, g.hh * z + 150);
+    var rx = Math.min(W * 0.39, g.hw * z + 270);
+    var ok = W >= 960 && H >= 560 && W / H >= 1.25 && ry >= g.hh * z + 20;
+    root.classList.toggle('orbit', ok);
+    orbit = ok;
+    SITES.forEach(function (s) { s.shown = -1; });
+    if (!ok) {
+      SITES.forEach(function (s) {
+        s.el.classList.remove('flip', 'tag-above', 'tag-below', 'tag-side');
+        ['--x', '--y', '--ax', '--p', '--s'].forEach(function (v) { s.el.style.removeProperty(v); });
+        s.box = s.anchor = null; s.route = '';
+      });
+      measure();
+      return;
+    }
+    var head = boxOf(headlineEl.getBoundingClientRect(), 16);
+    var keep = destHud.textContent;               // measure the telemetry with its longest label
+    destHud.textContent = longestUniform;
+    var hud = boxOf(hudEl.getBoundingClientRect(), 14);
+    destHud.textContent = keep;
+    var reachMax = Math.min(W, H) * CONFIG.reach;
+    SITES.forEach(function (s) {
+      var a = s.angle * Math.PI / 180;
+      var ax = g.x + rx * Math.cos(a), ay = g.y - ry * Math.sin(a);
+      var w = s.el.offsetWidth, h = s.el.offsetHeight;
+      var flip = Math.cos(a) < -0.15;               // left of the drone: text on the outer (left) side
+      var b = chipBox(ax, ay, w, h, flip);
+      if (b.left < 12 || b.right > W - 12 || hits(b, head)) {
+        var alt = chipBox(ax, ay, w, h, !flip);
+        if (alt.left >= 12 && alt.right <= W - 12 && !hits(alt, head)) { b = alt; flip = !flip; }
+      }
+      if (hits(b, head)) {                           // still on the headline: beside it (upper pins) or below it
+        var right = chipBox(ax, ay, w, h, false);
+        if (ay < (head.top + head.bottom) / 2 && head.right - right.left < 180) { b = shift(right, Math.max(0, head.right - right.left), 0); flip = false; }
+        else b = shift(b, 0, head.bottom - b.top);
+      }
+      if (hits(b, hud)) b = shift(b, 0, hud.top - b.bottom);        // keep the telemetry readable
+      b = shift(b, Math.max(12 - b.left, Math.min(0, W - 12 - b.right)),
+                   Math.max(navBottom + 12 - b.top, Math.min(0, H - 12 - b.bottom)));
+      s.el.classList.toggle('flip', flip);
+      // The uniform tag goes on the chip's far side from the drone, or beside it when there is no room.
+      var upper = ay < g.y, tagW = s.el.querySelector('.tag') ? s.el.querySelector('.tag').offsetWidth : 120;
+      var tb = shift(b, 0, upper ? -34 : 34);
+      var tagPos = (upper ? tb.top > navBottom + 6 : tb.bottom < H - 8 && !hits(tb, hud)) ? (upper ? 'tag-above' : 'tag-below') : 'tag-side';
+      if (tagPos === 'tag-side' && (flip ? b.left - 8 - tagW < 8 : b.right + 8 + tagW > W - 8)) tagPos = upper ? 'tag-below' : 'tag-above';
+      s.el.classList.remove('tag-above', 'tag-below', 'tag-side');
+      s.el.classList.add(tagPos);
+      s.el.style.setProperty('--x', fx(b.left) + 'px');
+      s.el.style.setProperty('--y', fx(b.top) + 'px');
+      s.el.style.setProperty('--ax', (flip ? w - ICON_HALF : ICON_HALF) + 'px');
+      s.box = b;
+      s.anchor = { x: flip ? b.right - ICON_HALF : b.left + ICON_HALF, y: (b.top + b.bottom) / 2 };
+      s.reach = Math.max(CONFIG.minReach, Math.min(reachMax, Math.sqrt(Math.pow(s.anchor.x - g.x, 2) + Math.pow(s.anchor.y - g.y, 2))));
+      s.route = routePath(g, s.anchor);
+    });
+    orbitRing.setAttribute('cx', fx(g.x)); orbitRing.setAttribute('cy', fx(g.y));
+    orbitRing.setAttribute('rx', fx(rx)); orbitRing.setAttribute('ry', fx(ry));
+    measure();
+  }
+  function measure() {
+    SITES.forEach(function (s) {
+      if (orbit && s.box) { s.rect = s.box; return; }
+      var r = s.el.getBoundingClientRect();
+      s.rect = { left: r.left, top: r.top, right: r.right, bottom: r.bottom };
+    });
+  }
+
+  // ---- Distance to the destinations -> clip progress -------------------------------------------
   function rectDist(x, y, r) {
     var dx = Math.max(r.left - x, 0, x - r.right);
     var dy = Math.max(r.top - y, 0, y - r.bottom);
@@ -692,54 +921,82 @@
     }
     return ratio >= 1 ? 0 : 1;
   }
-  function nearest(x, y) {
-    var best = null, bestD = Infinity;
-    SITES.forEach(function (s) {
-      var d = rectDist(x, y, s.el.getBoundingClientRect());
-      if (d < bestD) { bestD = d; best = s; }
-    });
-    return { site: best, progress: curve(Math.min(1, bestD / influence())) };
+  function follow(x, y) {
+    var a = null, b = null, da = Infinity, db = Infinity;
+    for (var i = 0; i < SITES.length; i++) {
+      var s = SITES[i];
+      if (!s.rect) continue;
+      var d = rectDist(x, y, s.rect);
+      if (d < da) { b = a; db = da; a = s; da = d; }
+      else if (d < db) { b = s; db = d; }
+    }
+    if (!a) return;
+    var progress;
+    if (orbit) {
+      var lead = b ? (db - da) / (db + da + 0.001) : 1;     // 1 on top of a destination, 0 halfway to the next one
+      progress = Math.pow(lead, CONFIG.dominance) * Math.max(0, 1 - da / a.reach);
+    } else {
+      progress = curve(Math.min(1, da / influence()));
+    }
+    setActive(a, progress);
   }
 
   // ---- Active destination ----------------------------------------------------------------------
   function setLink(v) { linkEl.textContent = v; }
+  function shownOf(p) {
+    var v = p.cur;
+    if (p.ready && p.duration) v = Math.max(v, p.video.currentTime / p.duration);
+    return v;
+  }
   function setActive(site, progress) {
-    if (launching) return;
+    if (launching || !site) return;
+    progress = Math.max(0, Math.min(1, progress));
     if (site !== active) {
+      var cp = active && players[active.clipKey];
+      if (cp && site.clipKey !== active.clipKey && shownOf(cp) > CONFIG.switchAt) {
+        // The drone takes the current uniform off first; the new clip takes over on the shared first frame.
+        pending = { site: site, progress: progress };
+        for (var k in players) players[k].tgt = 0;
+        ensureLoaded(site);
+        kick();
+        return;
+      }
       active = site;
       applyActive();
     }
-    for (var k in players) players[k].tgt = 0;
-    if (site) {
-      var p = ensureLoaded(site);
-      p.tgt = Math.max(0, Math.min(1, progress)) * site.max;
-      if (p.ready) setLink('OK');
-    }
+    pending = null;
+    for (var k2 in players) players[k2].tgt = 0;
+    var p = ensureLoaded(site);
+    p.tgt = progress * site.max;
+    if (p.ready) setLink('OK');
     kick();
   }
   function applyActive() {
-    SITES.forEach(function (s) { s.el.classList.toggle('near', s === active); });
     for (var k in players) players[k].video.classList.remove('active');
     if (!active) return;
     var p = playerOf(active);
     p.video.classList.add('active');
-    document.documentElement.style.setProperty('--dest', active.color);
+    rootStyle.setProperty('--dest', active.color);
     destNav.textContent = active.shortName;
     destHud.textContent = active.uniform || active.shortName;
     clipEl.textContent = active.clipKey === 'base' ? 'base' : active.clipKey;
-    if (!p.ready) setLink(p.loading ? '…' : '0%');
+    setLink(p.ready ? 'OK' : (p.loading ? '…' : '0%'));
   }
 
   // ---- Animation loop: smooth, then seek (throttled) ------------------------------------------
-  var raf = 0;
+  var raf = 0, lastTick = 0;
   function kick() { if (!raf) raf = requestAnimationFrame(tick); }
   function tick(now) {
     raf = 0;
-    var busy = false, k = reduceMotion ? 1 : CONFIG.response;
+    var frames = lastTick ? Math.min(6, (now - lastTick) / 16.667) : 1;
+    lastTick = now;
+    var busy = false;
+    var k = reduceMotion ? 1 : 1 - Math.pow(1 - CONFIG.response, frames);
+    var kOff = reduceMotion ? 1 : 1 - Math.pow(1 - CONFIG.rewind, frames);
     for (var key in players) {
       var p = players[key];
       if (p.playing) { p.cur = p.duration ? p.video.currentTime / p.duration : 1; busy = true; continue; }
-      p.cur += (p.tgt - p.cur) * k;
+      p.cur += (p.tgt - p.cur) * (pending && active && key === active.clipKey ? kOff : k);
       if (Math.abs(p.tgt - p.cur) < 0.0008) p.cur = p.tgt;
       if (p.ready && p.duration) {
         var t = Math.min(p.duration - 0.05, Math.max(0.001, p.cur * p.duration));
@@ -752,8 +1009,13 @@
         if (p.cur !== p.tgt || p.seeking || Math.abs(t - p.video.currentTime) > halfFrame) busy = true;
       } else if (p.cur !== p.tgt) busy = true;
     }
+    if (pending) {
+      var cp = active && players[active.clipKey];
+      if (!cp || shownOf(cp) <= CONFIG.switchAt) { var next = pending; pending = null; setActive(next.site, next.progress); }
+      else busy = true;
+    }
     render();
-    if (busy) kick();
+    if (busy) kick(); else lastTick = 0;
   }
   function render() {
     var p = active ? players[active.clipKey] : null;
@@ -762,6 +1024,19 @@
     meterFill.style.transform = 'scaleX(' + shown.toFixed(3) + ')';
     tint.style.opacity = (shown * 0.5).toFixed(3);
     if (!launching && !reduceMotion) rootStyle.setProperty('--zoom', (1 + CONFIG.hoverZoom * shown).toFixed(4));
+    for (var i = 0; i < SITES.length; i++) {
+      var s = SITES[i], v = s === active ? shown : 0;
+      if (Math.abs(v - s.shown) < 0.002 && !(v === 0 && s.shown > 0)) continue;
+      s.shown = v;
+      s.el.classList.toggle('near', v > 0.06);
+      if (orbit) { s.el.style.setProperty('--p', v.toFixed(3)); s.el.style.setProperty('--s', (1 + 0.06 * v).toFixed(4)); }
+    }
+    if (orbit) {
+      rootStyle.setProperty('--focus', shown.toFixed(3));
+      var d = (active && active.route) || '';
+      if ((routeEl.getAttribute('d') || '') !== (d || 'M0 0')) routeEl.setAttribute('d', d || 'M0 0');
+      routeEl.style.opacity = d ? Math.min(1, shown * 1.8).toFixed(3) : '0';
+    }
   }
 
   // ---- Pointer input ---------------------------------------------------------------------------
@@ -779,7 +1054,6 @@
     ring.style.transform = 'translate3d(' + ringX.toFixed(1) + 'px,' + ringY.toFixed(1) + 'px,0)';
     ringRaf = (Math.abs(ringTX - ringX) + Math.abs(ringTY - ringY) > 0.3) ? requestAnimationFrame(stepRing) : 0;
   }
-  function follow(x, y) { var n = nearest(x, y); setActive(n.site, n.progress); }
 
   window.addEventListener('pointermove', function (e) {
     if (e.pointerType === 'touch') {
@@ -789,6 +1063,7 @@
     pointer = { x: e.clientX, y: e.clientY };
     moveRing(e.clientX, e.clientY);
     follow(e.clientX, e.clientY);
+    startPrefetch();
   }, { passive: true });
   window.addEventListener('pointerdown', function (e) {
     if (e.pointerType === 'touch') { clearTimeout(releaseTimer); follow(e.clientX, e.clientY); }
@@ -796,11 +1071,15 @@
   window.addEventListener('pointerup', function (e) {
     if (e.pointerType === 'touch') releaseTimer = setTimeout(function () { setActive(active, 0); }, 700);
   }, { passive: true });
-  document.documentElement.addEventListener('mouseleave', function () {
+  root.addEventListener('mouseleave', function () {
     pointer = null; ring.classList.remove('on'); setActive(active, 0);
   });
   window.addEventListener('blur', function () { pointer = null; setActive(active, 0); });
-  window.addEventListener('resize', function () { if (pointer) follow(pointer.x, pointer.y); });
+  window.addEventListener('resize', function () {
+    if (launching) return;
+    layout();
+    if (pointer) follow(pointer.x, pointer.y); else render();
+  });
 
   SITES.forEach(function (s) {
     s.el.addEventListener('pointerenter', function () { ring.classList.add('hot'); ensureLoaded(s); });
@@ -808,7 +1087,7 @@
     s.el.addEventListener('focus', function () { if (s.el.matches(':focus-visible')) setActive(s, 0.85); });
     s.el.addEventListener('blur', function () { if (pointer) follow(pointer.x, pointer.y); else setActive(active, 0); });
 
-    // Click: the drone finishes dressing at natural speed (about 3 s), takes off, then we go to the site.
+    // Click: the drone finishes dressing, comes to the foreground, takes off, then we go to the site.
     s.el.addEventListener('click', function (e) {
       if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       if (launching) { e.preventDefault(); return; }
@@ -824,11 +1103,12 @@
 
   function launch(site, url) {
     launching = true;
+    pending = null;
     if (site !== active) { active = site; applyActive(); }
     setAbout(false); setContact(false);
     launchName.textContent = site.el.querySelector('.name').textContent;
     launchUniform.textContent = site.uniform || site.shortName;
-    var p = playerOf(site), phase = 0, timers = [];
+    var p = playerOf(site);
     var dress = reduceMotion ? 1.2 : CONFIG.dressSeconds, closeup = reduceMotion ? 1.2 : CONFIG.closeupSeconds, lift = reduceMotion ? 0.8 : CONFIG.takeoffSeconds;
     function setStage(zoom, liftPct, bright, sat) {
       if (reduceMotion) return;
@@ -845,27 +1125,26 @@
       p.video.addEventListener('ended', function () { p.video.pause(); });
       var pr = p.video.play();
       if (pr && pr.catch) pr.catch(function () {});
+      kick();
     }
     // Phase 2: close-up on the drone in its new uniform.
-    timers.push(setTimeout(function () {
-      phase = 1;
+    setTimeout(function () {
       document.body.classList.add('closeup');
       setStage(1.7, -6, 1.0, 1.15);
-    }, dress * 1000));
+    }, dress * 1000);
     // Phase 3: lift-off, flash, and off to the site.
-    timers.push(setTimeout(function () {
-      phase = 2;
+    setTimeout(function () {
       document.body.classList.add('takeoff');
       setStage(2.3, -26, 1.6, 1.1);
-    }, (dress + closeup) * 1000));
-    timers.push(setTimeout(function () {
+    }, (dress + closeup) * 1000);
+    setTimeout(function () {
       if (url) { window.location.href = url; return; }
       // No navigation here (preview): reset the stage after the show
       document.body.classList.remove('launch', 'closeup', 'takeoff');
       setStage(1, 0, 1, 1);
-      p.playing = false; p.video.pause(); p.cur = p.tgt = 0; p.video.currentTime = 0.001;
-      setTimeout(function () { launching = false; kick(); }, 900);
-    }, (dress + closeup + lift) * 1000));
+      p.playing = false; p.video.pause(); p.video.playbackRate = 1; p.cur = p.tgt = 0; p.video.currentTime = 0.001;
+      setTimeout(function () { launching = false; layout(); kick(); }, 900);
+    }, (dress + closeup + lift) * 1000);
   }
 
   // ---- About / Contact panels ------------------------------------------------------------------
@@ -894,7 +1173,14 @@
   SITES.forEach(function (s) { if (s.id === hash) deep = s; });
   active = deep || SITES[0];
   applyActive();
-  load(makePlayer('base'));
+  layout();
+  // Web fonts change the width of the destinations: place them again once they are in.
+  function relayout() { if (launching) return; layout(); if (pointer) follow(pointer.x, pointer.y); else render(); }
+  if (document.fonts) {
+    if (document.fonts.ready) document.fonts.ready.then(relayout);
+    if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', relayout);
+  }
+  window.addEventListener('load', relayout);
   if (deep) { deep.el.focus(); setActive(deep, 0.85); }
   render();
 })();

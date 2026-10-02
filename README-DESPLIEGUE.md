@@ -38,7 +38,9 @@ No necesita base de datos ni PHP. Se sube tal cual a cualquier hosting estático
 
 1. En `index.html`, duplica un bloque `<a class="dest">` y cambia:
    `href` (web final), `data-clip` (nombre corto, también nombre del clip), `data-short`, `data-uniform`,
-   `data-color` y `style="--c:…"` (color del destino), `data-path` y los textos.
+   `data-color` y `style="--c:…"` (color del destino), `data-path`, `data-angle` y los textos.
+   `data-angle` es la posición del destino alrededor del dron en pantallas anchas (0 = derecha, 90 = arriba,
+   180 = izquierda, 270 = abajo). Deja al menos 35° entre destinos vecinos para que cada uno tenga su espacio.
 2. Agrega su atajo en `_redirects` y/o `.htaccess`.
 3. Cuando tengas su clip, guárdalo como `media/<data-clip>-720.mp4` (y, si puedes, `-1080.mp4` y `-720.webm`).
    Sin clip, el destino usa el clip base hasta la pose «mira hacia los botones».
@@ -69,8 +71,13 @@ sola dirección: tranquilo → nota al visitante → se cambia de uniforme → p
 
 ## Prueba antes de publicar
 
-- Cursor lejos: dron tranquilo. Acercándote a un botón: abre los ojos y empieza a cambiarse. Sobre el botón: uniforme completo (instructor, asesor, vendedor, agricultor, operador, piloto o guardia).
-- Cambia de un botón a otro: el uniforme anterior se deshace mientras aparece el nuevo.
+- Pantalla ancha (computador): los 7 destinos rodean al dron sobre una órbita punteada, separados entre sí.
+- Cursor sobre el dron o a medio camino entre dos destinos: dron neutro, con sus audífonos.
+- Acercándote a un destino: el dron se va vistiendo poco a poco (anillo de progreso en el destino, ruta punteada
+  desde el dron y etiqueta del uniforme). Sobre el destino: uniforme completo (instructor, asesor, vendedor,
+  agricultor, operador, piloto o guardia). Los demás destinos se atenúan.
+- Pasa de un destino a otro: el dron se quita el uniforme anterior y luego se pone el nuevo.
+- Ventana angosta o teléfono: los destinos se muestran como lista abajo a la izquierda.
 - Clic: secuencia de 9 s: el dron termina de vestirse mientras la escena se acerca (≈4,4 s), primer plano del dron con el nombre del destino (3 s), despegue con destello (1,6 s) y navega a la web en la misma pestaña.
 - `hdroneschile.cl/academia`, `/asesorias`, `/tienda`, `/agro`, `/servicios`, `/pilotos` y `/antidrones` deben responder 301 a la web correspondiente.
 - En el teléfono: arrastra el dedo hacia un botón para ver la transición; tocar navega.
