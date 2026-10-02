@@ -71,6 +71,6 @@ sola dirección: tranquilo → nota al visitante → se cambia de uniforme → p
 
 - Cursor lejos: dron tranquilo. Acercándote a un botón: abre los ojos y empieza a cambiarse. Sobre el botón: uniforme completo (instructor, asesor, vendedor, agricultor, operador, piloto o guardia).
 - Cambia de un botón a otro: el uniforme anterior se deshace mientras aparece el nuevo.
-- Clic: el dron termina de vestirse a velocidad normal (≈3 s), la pantalla hace zoom con un destello blanco y navega a la web en la misma pestaña (≈3,5 s en total).
+- Clic: secuencia de 9 s: el dron termina de vestirse mientras la escena se acerca (≈4,4 s), primer plano del dron con el nombre del destino (3 s), despegue con destello (1,6 s) y navega a la web en la misma pestaña.
 - `hdroneschile.cl/academia`, `/asesorias`, `/tienda`, `/agro`, `/servicios`, `/pilotos` y `/antidrones` deben responder 301 a la web correspondiente.
 - En el teléfono: arrastra el dedo hacia un botón para ver la transición; tocar navega.

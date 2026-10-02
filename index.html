@@ -57,8 +57,15 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Video layer: one <video> per destination clip, cross-faded */
-  .stage { position: fixed; inset: 0; overflow: hidden; touch-action: none; transition: transform 0.5s ease, filter 0.5s ease; }
+  /* Video layer: one <video> per destination clip, cross-faded. The stage zooms toward the drone
+     (origin ≈ where it hovers) as the cursor approaches, and much more during the take-off sequence. */
+  .stage {
+    position: fixed; inset: 0; overflow: hidden; touch-action: none;
+    transform-origin: 62% 48%;
+    transform: translateY(var(--lift, 0%)) scale(var(--zoom, 1));
+    filter: brightness(var(--bright, 1)) saturate(var(--sat, 1));
+    transition: transform 0.45s cubic-bezier(0.2, 0.6, 0.2, 1), filter 0.45s ease;
+  }
   .stage video {
     position: absolute; inset: 0; width: 100%; height: 100%;
     object-fit: cover; object-position: 50% 50%;
@@ -70,30 +77,47 @@
     position: absolute; inset: 0; pointer-events: none;
     background: linear-gradient(90deg, rgba(8, 26, 44, 0.40) 0%, rgba(8, 26, 44, 0.14) 34%, rgba(8, 26, 44, 0) 54%),
                 linear-gradient(0deg, rgba(8, 26, 44, 0.26) 0%, rgba(8, 26, 44, 0) 36%);
+    transition: opacity 0.8s ease;
   }
   .tint {
     position: absolute; inset: 0; pointer-events: none;
     background: var(--dest); mix-blend-mode: soft-light; opacity: 0;
     transition: background-color 0.3s ease;
   }
-  body.launch .stage { transform: scale(1.04); filter: brightness(1.06) saturate(1.1); }
-  body.launch .copy, body.launch .hud, body.launch .nav { pointer-events: none; }
-
-  /* Take-off: the stage lifts and brightens, the UI steps aside, a white flash covers the cut to the site */
-  .flash { position: fixed; inset: 0; z-index: 20; pointer-events: none; opacity: 0; background: #FFFFFF; transition: opacity 0.55s ease 0.3s; }
-  .launch-label {
-    position: fixed; z-index: 21; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 44%);
-    transform: translate(-50%, 12px); margin: 0; opacity: 0; pointer-events: none;
-    font: 800 clamp(22px, 3vw, 36px)/1.1 var(--display); letter-spacing: -0.02em; color: var(--text);
-    text-shadow: 0 2px 28px var(--shadow); white-space: nowrap;
-    transition: opacity 0.4s ease, transform 0.4s ease;
+  .vignette {
+    position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0;
+    background: radial-gradient(ellipse 58% 62% at 62% 48%, rgba(8, 26, 44, 0) 40%, rgba(8, 26, 44, 0.55) 100%);
+    transition: opacity 1.2s ease;
   }
-  body.launch .launch-label { opacity: 1; transform: translate(-50%, 0); }
-  body.takeoff .stage { transform: scale(1.24) translateY(-7%); filter: brightness(1.4) saturate(1.1); transition: transform 0.9s cubic-bezier(0.3, 0.7, 0.2, 1), filter 0.9s ease; }
-  body.takeoff .copy, body.takeoff .hud, body.takeoff .nav, body.takeoff .about { opacity: 0; transform: translateY(14px); transition: opacity 0.4s ease, transform 0.5s ease; }
-  body.takeoff .nav { transform: translate(-50%, -14px); }
+
+  /* Take-off sequence (≈9 s): 1) the drone finishes dressing while the stage pushes in slowly and the UI steps
+     aside; 2) close-up on the drone with the destination name; 3) lift-off, flash, and off to the site. */
+  body.launch .copy, body.launch .hud, body.launch .nav, body.launch .contact { pointer-events: none; }
+  body.launch .stage { transition: transform 4.6s cubic-bezier(0.25, 0.5, 0.2, 1), filter 4.6s ease; }
+  body.launch .copy, body.launch .hud { opacity: 0; transform: translateY(18px); transition: opacity 1.2s ease, transform 1.4s ease; }
+  body.launch .nav { opacity: 0; transform: translate(-50%, -16px); transition: opacity 1.2s ease, transform 1.4s ease; }
+  body.launch .about, body.launch .contact { opacity: 0; transition: opacity 0.5s ease; }
+  body.launch .shade { opacity: 0.35; }
+  body.launch .ring { opacity: 0; }
+  body.closeup .stage { transition: transform 2.6s cubic-bezier(0.3, 0.6, 0.2, 1), filter 2.6s ease; }
+  body.closeup .vignette { opacity: 1; }
+  body.takeoff .stage { transition: transform 1.4s cubic-bezier(0.4, 0.6, 0.3, 1), filter 1.4s ease; }
+  .flash { position: fixed; inset: 0; z-index: 20; pointer-events: none; opacity: 0; background: #FFFFFF; transition: opacity 0.9s ease 0.45s; }
   body.takeoff .flash { opacity: 1; }
-  body.takeoff .launch-label { opacity: 0; transform: translate(-50%, -24px); transition-delay: 0.25s; }
+  .launch-label {
+    position: fixed; z-index: 21; left: var(--gutter); bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(40px, 10vh, 110px));
+    margin: 0; opacity: 0; pointer-events: none; transform: translateY(16px);
+    display: grid; gap: 10px; max-width: min(560px, calc(100% - 2 * var(--gutter)));
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .launch-label .kicker { font: 500 12px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-soft); }
+  .launch-label .kicker b { color: var(--dest); font-weight: 500; }
+  .launch-label .big { font: 800 clamp(34px, 5.4vw, 84px)/0.95 var(--display); letter-spacing: -0.04em; color: var(--text); text-shadow: 0 2px 30px var(--shadow); text-wrap: balance; }
+  .launch-label .bar { height: 3px; width: min(100%, 420px); border-radius: 2px; background: rgba(255, 255, 255, 0.25); overflow: hidden; }
+  .launch-label .bar i { display: block; height: 100%; width: 100%; transform-origin: left; transform: scaleX(0); background: var(--dest); }
+  body.launch .launch-label { opacity: 1; transform: translateY(0); }
+  body.launch .launch-label .bar i { transform: scaleX(1); transition: transform 8.6s linear; }
+  body.takeoff .launch-label { opacity: 0; transform: translateY(-30px); transition: opacity 0.5s ease, transform 0.7s ease; }
 
   /* Navigation */
   .nav {
@@ -138,7 +162,7 @@
     transition: background-color 0.25s ease;
   }
 
-  .about {
+  .about, .contact {
     position: fixed; z-index: 6;
     top: calc(env(safe-area-inset-top, 0px) + 76px);
     right: max(16px, calc(50% - 440px));
@@ -152,10 +176,25 @@
     box-shadow: 0 18px 40px rgba(8, 24, 40, 0.28);
     font: 500 14px/1.55 var(--ui); color: var(--text);
   }
-  .about h2 { margin: 0 0 6px; font: 800 18px/1.2 var(--display); letter-spacing: -0.01em; }
+  .about h2, .contact h2 { margin: 0 0 6px; font: 800 18px/1.2 var(--display); letter-spacing: -0.01em; }
   .about p { margin: 0 0 8px; color: var(--text-soft); }
   .about p:last-child { margin: 0; }
   .about code { font: 500 12.5px/1 var(--mono); color: var(--text); background: rgba(255, 255, 255, 0.12); padding: 2px 6px; border-radius: 6px; }
+
+  /* Contact panel: same data as academiadronchile.cl */
+  .contact { width: min(380px, calc(100% - 32px)); }
+  .contact .sub { margin: 0 0 12px; color: var(--text-soft); }
+  .contact ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .contact li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; }
+  .contact li svg { width: 18px; height: 18px; margin-top: 2px; color: var(--rotor); }
+  .contact li span { display: block; font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-soft); font-family: var(--mono); }
+  .contact a { color: var(--text); text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.28); }
+  .contact a:hover { border-bottom-color: var(--rotor); }
+  .contact .hours { margin: 12px 0 0; padding-top: 10px; border-top: 1px solid var(--line); color: var(--text-soft); font-size: 13px; }
+  .contact .social { display: flex; gap: 8px; margin-top: 10px; }
+  .contact .social a { font: 600 12px/1 var(--ui); padding: 8px 11px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 255, 255, 0.08); }
+  .contact .social a:hover { background: rgba(255, 255, 255, 0.16); }
+
 
   /* Headline and destinations */
   .copy {
@@ -244,7 +283,10 @@
     text-shadow: 0 1px 8px rgba(8, 26, 44, 0.4);
     font-variant-numeric: tabular-nums;
   }
-  .hud .row { display: flex; gap: 18px; }
+  .hud .row { display: flex; gap: 18px; text-transform: none; letter-spacing: 0.02em; }
+  .hud .row a { color: var(--text); text-decoration: none; }
+  .hud .row a:hover { color: var(--rotor); }
+  .hud .tele { text-transform: uppercase; letter-spacing: 0.08em; }
   .hud .dim { color: rgba(255, 255, 255, 0.7); }
   .uniform { display: flex; align-items: center; gap: 12px; }
   .uniform b { font-weight: 500; color: var(--text); }
@@ -302,9 +344,14 @@
     .uniform { width: 100%; }
     .meter { flex: 1; width: auto; }
   }
-  @media (max-width: 480px) {
+  #about-btn .short { display: none; }
+  @media (max-width: 560px) {
     .status .lbl { display: none; }
     .eyebrow { font-size: 11px; letter-spacing: 0.06em; }
+    #about-btn .long { display: none; }
+    #about-btn .short { display: inline; }
+    .nav a, .nav button, .status { padding: 10px 7px; }
+    .launch-label { left: 16px; max-width: calc(100% - 32px); }
   }
   @media (max-width: 400px) {
     .logo { font-size: 15px; }
@@ -312,9 +359,10 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .dest, .ring, .status i, .stage, .stage video, .tint, .flash, .launch-label { transition: none; }
-    body.launch .stage, body.takeoff .stage { transform: none; filter: none; }
-    body.takeoff .copy, body.takeoff .hud, body.takeoff .nav { transform: none; }
+    .dest, .ring, .status i, .stage, .stage video, .tint, .flash, .launch-label, .vignette, .shade { transition: none; }
+    .stage { transform: none !important; filter: none !important; }
+    body.launch .copy, body.launch .hud, body.launch .nav, body.takeoff .launch-label { transform: none; }
+    body.launch .launch-label .bar i { transition: none; }
   }
 </style>
 
@@ -328,14 +376,48 @@
   <ul>
     <li class="home"><a href="#top" aria-current="page">Inicio</a></li>
     <li><span class="status" aria-live="polite"><i></i><span class="lbl">Destino:&nbsp;</span><b id="dest-nav">—</b></span></li>
-    <li><button type="button" id="about-btn" aria-expanded="false" aria-controls="about">Cómo funciona</button></li>
+    <li><button type="button" id="contact-btn" aria-expanded="false" aria-controls="contact">Contacto</button></li>
+    <li><button type="button" id="about-btn" aria-expanded="false" aria-controls="about"><span class="long">Cómo funciona</span><span class="short">Info</span></button></li>
   </ul>
 </nav>
 
 <section class="about" id="about" hidden>
   <h2>Un dron, todas nuestras webs</h2>
-  <p>El dron reacciona a tu cursor. Mientras te acercas a un destino se va cambiando de uniforme según la web a la que te va a llevar; al pulsar el botón, despega hacia allá. En el teléfono, arrastra el dedo hacia un botón.</p>
+  <p>El dron reacciona a tu cursor. Mientras te acercas a un destino se va cambiando de uniforme según la web a la que te va a llevar; al pulsar el botón, termina de vestirse, pasa a primer plano y despega hacia allá. En el teléfono, arrastra el dedo hacia un botón.</p>
   <p>Atajos directos: <code>hdroneschile.cl/academia</code>, <code>/asesorias</code>, <code>/tienda</code>, <code>/agro</code>, <code>/servicios</code>, <code>/pilotos</code> y <code>/antidrones</code>.</p>
+</section>
+
+<section class="contact" id="contact" hidden>
+  <h2>Contacto</h2>
+  <p class="sub">Academia de Drones de Chile · HDRONES®</p>
+  <ul>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.1A8 8 0 1 1 20 12z"/><path d="M9 10.5c.4 1.6 1.9 3.1 3.5 3.5l1.3-1.1 2 1.1c-.5 1.6-1.6 2-2.9 1.6-2.7-.8-5-3.1-5.8-5.8-.4-1.3 0-2.4 1.6-2.9l1.1 2z"/></svg>
+      <div><span>WhatsApp · Cursos de drones</span><a href="https://wa.me/56994677613" target="_blank" rel="noopener">+56 9 9467 7613</a></div>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8.5h14l-1 11.5H6z"/><path d="M8.5 8.5V7a3.5 3.5 0 0 1 7 0v1.5"/></svg>
+      <div><span>WhatsApp · Venta Dron Chile</span><a href="https://wa.me/56974883322" target="_blank" rel="noopener">+56 9 7488 3322</a></div>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5V11"/><path d="M12 11c-4.5 0-7-2.6-7-6.5 4.5 0 7 2.6 7 6.5z"/><path d="M12 14c4.5 0 7-2.6 7-6.5-4.5 0-7 2.6-7 6.5z"/></svg>
+      <div><span>WhatsApp · Venta Dron Agrícola</span><a href="https://wa.me/56935470104" target="_blank" rel="noopener">+56 9 3547 0104</a></div>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="m4.5 7 7.5 5.5L19.5 7"/></svg>
+      <div><span>Correo</span><a href="mailto:info@academiadronchile.cl">info@academiadronchile.cl</a></div>
+    </li>
+    <li>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>
+      <div><span>Campo de vuelo</span>Padre Hurtado, Región Metropolitana</div>
+    </li>
+  </ul>
+  <p class="hours">Lunes a sábado, 09:00 a 18:00 hrs.</p>
+  <div class="social">
+    <a href="https://www.instagram.com/academiadronchile.cl" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.facebook.com/academiadronchile.cl" target="_blank" rel="noopener">Facebook</a>
+    <a href="https://www.academiadronchile.cl/" target="_blank" rel="noopener">academiadronchile.cl</a>
+  </div>
 </section>
 
 <main class="copy" id="top">
@@ -429,12 +511,12 @@
   </nav>
 </main>
 
-<div class="hud" aria-hidden="true">
+<div class="hud">
   <div class="row">
-    <span><span class="dim">AOC</span> DGAC 1688</span>
-    <span><span class="dim">BAT</span> 86%</span>
-    <span><span class="dim">LINK</span> <span id="link">0%</span></span>
-    <span><span class="dim">CLIP</span> <span id="clip">base</span></span>
+    <a href="https://wa.me/56994677613" target="_blank" rel="noopener"><span class="dim">WhatsApp</span> +56 9 9467 7613</a>
+    <a href="mailto:info@academiadronchile.cl">info@academiadronchile.cl</a>
+    <span><span class="dim">Lun–Sáb</span> 09:00–18:00</span>
+    <span class="tele"><span class="dim">LINK</span> <span id="link">0%</span> <span class="dim">CLIP</span> <span id="clip">base</span></span>
   </div>
   <div class="uniform">
     <span><span class="dim">UNIFORME</span> <b id="dest-hud">—</b> <span id="pct">00</span>%</span>
@@ -443,8 +525,13 @@
 </div>
 
 <div class="ring" id="ring" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
 <div class="flash" aria-hidden="true"></div>
-<p class="launch-label" id="launch-label" aria-live="polite"></p>
+<div class="launch-label" id="launch-label" aria-live="polite">
+  <div class="kicker">Despegando hacia · <b id="launch-uniform"></b></div>
+  <div class="big" id="launch-name"></div>
+  <div class="bar"><i></i></div>
+</div>
 
 <script>
 (function () {
@@ -459,18 +546,26 @@
   var destHud = document.getElementById('dest-hud');
   var aboutBtn = document.getElementById('about-btn');
   var aboutPanel = document.getElementById('about');
+  var contactBtn = document.getElementById('contact-btn');
+  var contactPanel = document.getElementById('contact');
   var launchEl = document.getElementById('launch-label');
+  var launchName = document.getElementById('launch-name');
+  var launchUniform = document.getElementById('launch-uniform');
+  var rootStyle = document.documentElement.style;
 
   // Tuning: how cursor distance to a destination maps to that destination's clip.
   var CONFIG = {
-    influence: 0.5,            // share of the shorter viewport side where a destination starts reacting
-    minInfluence: 260, maxInfluence: 560,
+    influence: 0.8,            // share of the shorter viewport side where a destination starts reacting
+    minInfluence: 320, maxInfluence: 820,
     curve: [[1, 0], [0.6, 0.3], [0.15, 0.72], [0, 1]], // [distance ratio, clip progress]
     response: 0.14,            // smoothing per animation frame (0-1)
     seekFps: 30,               // max seeks per second per clip
     fps: 24,                   // frame rate of the clips
     fallbackMax: 0.42,         // destinations without their own clip reuse the base clip up to here (eyes open, looking)
-    launchMs: 900              // longest wait for the uniform to finish before leaving
+    hoverZoom: 0.10,           // extra stage zoom at full progress (the drone comes closer as you approach)
+    dressSeconds: 4.4,         // phase 1: the clip finishes dressing in about this long
+    closeupSeconds: 3.0,       // phase 2: close-up on the drone
+    takeoffSeconds: 1.6        // phase 3: lift-off and flash, then the site
   };
   var reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var embedded = false;
@@ -664,7 +759,8 @@
     var shown = p && active ? Math.min(1, p.cur / (active.max || 1)) : 0;
     pctEl.textContent = String(Math.round(shown * 100)).padStart(2, '0');
     meterFill.style.transform = 'scaleX(' + shown.toFixed(3) + ')';
-    tint.style.opacity = (shown * 0.35).toFixed(3);
+    tint.style.opacity = (shown * 0.5).toFixed(3);
+    if (!launching && !reduceMotion) rootStyle.setProperty('--zoom', (1 + CONFIG.hoverZoom * shown).toFixed(4));
   }
 
   // ---- Pointer input ---------------------------------------------------------------------------
@@ -728,47 +824,67 @@
   function launch(site, url) {
     launching = true;
     if (site !== active) { active = site; applyActive(); }
+    setAbout(false); setContact(false);
+    launchName.textContent = site.el.querySelector('.name').textContent;
+    launchUniform.textContent = site.uniform || site.shortName;
+    var p = playerOf(site), phase = 0, timers = [];
+    var dress = reduceMotion ? 1.2 : CONFIG.dressSeconds, closeup = reduceMotion ? 1.2 : CONFIG.closeupSeconds, lift = reduceMotion ? 0.8 : CONFIG.takeoffSeconds;
+    function setStage(zoom, liftPct, bright, sat) {
+      if (reduceMotion) return;
+      rootStyle.setProperty('--zoom', zoom); rootStyle.setProperty('--lift', liftPct + '%');
+      rootStyle.setProperty('--bright', bright); rootStyle.setProperty('--sat', sat);
+    }
+    // Phase 1: the drone finishes dressing at natural speed while the stage pushes in and the UI steps aside.
     document.body.classList.add('launch');
-    launchEl.textContent = 'Despegando hacia ' + site.shortName + '…';
-    var p = playerOf(site), done = false, timer = 0;
-    function takeoff() {
-      if (done) return;
-      done = true; clearTimeout(timer);
-      p.video.removeEventListener('ended', takeoff);
-      document.body.classList.add('takeoff');
-      setTimeout(function () {
-        if (url) { window.location.href = url; return; }
-        // No navigation here (preview): reset the stage after the show
-        setTimeout(function () {
-          document.body.classList.remove('launch', 'takeoff');
-          p.playing = false; p.video.pause(); p.cur = p.tgt = 0; p.video.currentTime = 0.001;
-          launchEl.textContent = ''; launching = false; kick();
-        }, 700);
-      }, reduceMotion ? 150 : 850);
-    }
+    setStage(1.22, -2, 1.04, 1.1);
     if (p.ready && p.duration) {
-      var remaining = Math.max(0.3, p.duration - p.video.currentTime);
-      p.video.playbackRate = Math.max(0.5, Math.min(2, remaining / 2.6)); // whole trip ≈ 2.6 s + take-off
+      var remaining = Math.max(0.4, p.duration - p.video.currentTime);
+      p.video.playbackRate = Math.max(0.35, Math.min(2, remaining / (dress - 0.3)));
       p.playing = true; p.seeking = false;
-      p.video.addEventListener('ended', takeoff);
+      p.video.addEventListener('ended', function () { p.video.pause(); });
       var pr = p.video.play();
-      if (pr && pr.catch) pr.catch(function () { takeoff(); });
-      timer = setTimeout(takeoff, 3400);
-    } else {
-      timer = setTimeout(takeoff, 500);
+      if (pr && pr.catch) pr.catch(function () {});
     }
+    // Phase 2: close-up on the drone in its new uniform.
+    timers.push(setTimeout(function () {
+      phase = 1;
+      document.body.classList.add('closeup');
+      setStage(1.7, -6, 1.0, 1.15);
+    }, dress * 1000));
+    // Phase 3: lift-off, flash, and off to the site.
+    timers.push(setTimeout(function () {
+      phase = 2;
+      document.body.classList.add('takeoff');
+      setStage(2.3, -26, 1.6, 1.1);
+    }, (dress + closeup) * 1000));
+    timers.push(setTimeout(function () {
+      if (url) { window.location.href = url; return; }
+      // No navigation here (preview): reset the stage after the show
+      document.body.classList.remove('launch', 'closeup', 'takeoff');
+      setStage(1, 0, 1, 1);
+      p.playing = false; p.video.pause(); p.cur = p.tgt = 0; p.video.currentTime = 0.001;
+      setTimeout(function () { launching = false; kick(); }, 900);
+    }, (dress + closeup + lift) * 1000));
   }
 
-  // ---- About panel -----------------------------------------------------------------------------
+  // ---- About / Contact panels ------------------------------------------------------------------
   function setAbout(open) {
     aboutPanel.hidden = !open;
     aboutBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) setContact(false);
+  }
+  function setContact(open) {
+    contactPanel.hidden = !open;
+    contactBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) { aboutPanel.hidden = true; aboutBtn.setAttribute('aria-expanded', 'false'); }
   }
   aboutBtn.addEventListener('click', function (e) { e.stopPropagation(); setAbout(aboutPanel.hidden); });
+  contactBtn.addEventListener('click', function (e) { e.stopPropagation(); setContact(contactPanel.hidden); });
   document.addEventListener('click', function (e) {
     if (!aboutPanel.hidden && !aboutPanel.contains(e.target) && e.target !== aboutBtn) setAbout(false);
+    if (!contactPanel.hidden && !contactPanel.contains(e.target) && !contactBtn.contains(e.target)) setContact(false);
   });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setAbout(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { setAbout(false); setContact(false); } });
 
   // ---- Boot ------------------------------------------------------------------------------------
   // #academia, #asesorias, #tienda… deep-link to a destination.
