@@ -77,7 +77,9 @@ sola dirección: tranquilo → nota al visitante → se cambia de uniforme → p
   desde el dron y etiqueta del uniforme). Sobre el destino: uniforme completo (instructor, asesor, vendedor,
   agricultor, operador, piloto o guardia). Los demás destinos se atenúan.
 - Pasa de un destino a otro: el dron se quita el uniforme anterior y luego se pone el nuevo.
-- Ventana angosta o teléfono: los destinos se muestran como lista abajo a la izquierda.
+- Teléfono o panel vertical: el dron queda arriba, entero y centrado, y los destinos van en un panel de dos columnas
+  abajo. Al tocar un destino el dron se viste durante el despegue (si su clip aún carga, lo espera).
+- Ventana horizontal angosta: los destinos se muestran como lista abajo a la izquierda.
 - Clic: secuencia de 9 s: el dron termina de vestirse mientras la escena se acerca (≈4,4 s), primer plano del dron con el nombre del destino (3 s), despegue con destello (1,6 s) y navega a la web en la misma pestaña.
 - `hdroneschile.cl/academia`, `/asesorias`, `/tienda`, `/agro`, `/servicios`, `/pilotos` y `/antidrones` deben responder 301 a la web correspondiente.
 - En el teléfono: arrastra el dedo hacia un botón para ver la transición; tocar navega.
